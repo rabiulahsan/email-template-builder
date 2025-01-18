@@ -1,12 +1,14 @@
 import Banner from "../Banner/Banner";
+import Demo from "../Demo/Demo";
 import Workwith from "../Workwith/Workwith";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Banner></Banner>
       <Workwith></Workwith>
-    </div>
+      <Demo></Demo>
+    </>
   );
 };
 
