@@ -1,3 +1,12 @@
+import { FaArrowRightLong, FaArrowLeftLong } from "react-icons/fa6";
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import { Navigation } from "swiper/modules";
+
 const Demo = () => {
   return (
     <div className="mx-[12%] py-[1%] ">
@@ -8,17 +17,48 @@ const Demo = () => {
         <span className="w-[60%] h-[3px] bg-gradient-to-r from-orange-600 via-transparent to-orange-600"></span>
       </div>
 
-      {/* Dynamic container with reserved height */}
-      <div>
-        {demoTemplate.map((template) => (
-          <div key={template.id}>
-            <img
-              src={template.image}
-              alt={template.name}
-              className="w-[200px] md:w-[300px] shadow-lg rounded-md transition-transform duration-300 hover:scale-105"
-            />
+      {/*  Swiper for email template demo*/}
+      <div className="py-[5%]  mx-auto">
+        <Swiper
+          slidesPerView={3}
+          spaceBetween={40}
+          loop={true}
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+            clickable: true,
+          }}
+          modules={[Navigation]}
+          className="mySwiper"
+        >
+          <div className="flex flex-wrap justify-around py-[4%]">
+            {demoTemplate.map((template) => (
+              <SwiperSlide key={template.id}>
+                <div
+                  key={template.id}
+                  className=" bg-[rgba(255,255,255,0.3)] shadow-lg rounded-lg   text-center backdrop-blur-lg"
+                >
+                  <img
+                    src={template.image}
+                    alt={template.name}
+                    className="h-[250px] rounded-lg"
+                  />
+                </div>
+                <p className="font-semibold text-slate-600 text-center my-4">
+                  {template.name}
+                </p>
+              </SwiperSlide>
+            ))}
           </div>
-        ))}
+          <div className="slider-controler flex justify-center items-center gap-x-5 mt-5">
+            <div className="swiper-button-prev bg-orange-100 hover:bg-orange-200 cursor-pointer font-bold text-orange-500 p-3 rounded-full">
+              <FaArrowLeftLong size={20} />
+            </div>
+            <div className="swiper-button-next bg-orange-100 hover:bg-orange-200 cursor-pointer font-bold text-orange-500 p-3 rounded-full">
+              <FaArrowRightLong size={20} />
+            </div>
+          </div>
+        </Swiper>
       </div>
     </div>
   );
