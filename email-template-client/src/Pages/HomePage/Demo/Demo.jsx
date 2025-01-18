@@ -36,12 +36,12 @@ const Demo = () => {
               <SwiperSlide key={template.id}>
                 <div
                   key={template.id}
-                  className=" bg-[rgba(255,255,255,0.3)] shadow-lg rounded-lg   text-center backdrop-blur-lg"
+                  className=" bg-[rgba(255,255,255,0.3)] shadow-lg rounded-lg   text-center backdrop-blur-lg overflow-hidden"
                 >
                   <img
                     src={template.image}
                     alt={template.name}
-                    className="h-[250px] rounded-lg"
+                    className="h-[250px] rounded-lg transform transition-transform duration-300 hover:scale-110"
                   />
                 </div>
                 <p className="font-semibold text-slate-600 text-center my-4">
