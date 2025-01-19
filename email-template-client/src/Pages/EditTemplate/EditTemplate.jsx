@@ -339,6 +339,23 @@ const EditTemplate = () => {
             </div>
 
             {/* font color button  */}
+            <div className="mt-5">
+              <p className="text-slate-600 text-sm font-semibold mb-2">
+                Font Color
+              </p>
+              <div className="flex gap-x-2 items-center">
+                {colorSamples.map((clr, idx) => (
+                  <div
+                    style={{ backgroundColor: clr.color }}
+                    className="rounded w-[40px] h-[40px] cursor-pointer"
+                    key={idx}
+                  ></div>
+                ))}
+                <div className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer">
+                  +
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -441,3 +458,14 @@ const templates = [
 //     progress: undefined,
 //   });
 // };
+
+//color samples
+const colorSamples = [
+  { id: 1, color: "#0284C7" }, // sky-600
+  { id: 2, color: "#6B21A8" }, // purple-700
+  { id: 3, color: "#000000" }, // black
+  { id: 4, color: "#334155" }, // slate-700
+  { id: 5, color: "#F97316" }, // orange-500
+  { id: 6, color: "#22C55E" }, // green-500
+  { id: 7, color: "#F43F5E" }, // rose-500
+];
