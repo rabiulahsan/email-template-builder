@@ -4,6 +4,12 @@ import { useRef, useState } from "react";
 // import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import {
+  MdFormatAlignLeft,
+  MdFormatAlignRight,
+  MdFormatAlignJustify,
+  MdFormatAlignCenter,
+} from "react-icons/md";
 
 const EditTemplate = () => {
   const [logo, setLogo] = useState(null);
@@ -244,6 +250,39 @@ const EditTemplate = () => {
                   }}
                   value={titleFocused ? titleText : descFocused ? descText : ""}
                 ></textarea>
+              </div>
+            </div>
+
+            {/* alignment button  */}
+            <div className="mt-5">
+              <p className="text-slate-600 text-sm font-semibold mb-2">
+                Alignment
+              </p>
+              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
+                <p
+                  className="flex-1 px-3 py-2 font-bold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center"
+                  title="Left"
+                >
+                  <MdFormatAlignLeft size={20}></MdFormatAlignLeft>
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 italic text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center"
+                  title="Right"
+                >
+                  <MdFormatAlignRight size={20}></MdFormatAlignRight>
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 underline text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center"
+                  title="Center"
+                >
+                  <MdFormatAlignCenter size={20}></MdFormatAlignCenter>
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 line-through text-center hover:bg-slate-100 cursor-pointer flex justify-center items-center"
+                  title="Justify"
+                >
+                  <MdFormatAlignJustify size={20}></MdFormatAlignJustify>
+                </p>
               </div>
             </div>
           </div>
