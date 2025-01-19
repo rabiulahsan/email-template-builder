@@ -8,10 +8,10 @@ const LogoImageUploader = ({ handleLogoChange, logo }) => {
             type="file"
             onChange={handleLogoChange}
             className="hidden"
-            id="file-upload"
+            id="logo-upload"
             accept="image/*"
           />
-          <label htmlFor="file-upload" className="cursor-pointer ">
+          <label htmlFor="logo-upload" className="cursor-pointer ">
             <span className="font-bold text-sm text-orange-500 hover:underline">
               Add Logo
             </span>

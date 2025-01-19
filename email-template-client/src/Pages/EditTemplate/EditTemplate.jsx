@@ -7,13 +7,13 @@ import MainImageUploader from "../../Components/MainImageUploader/MainImageUploa
 const EditTemplate = () => {
   const [logo, setLogo] = useState(null);
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null); // For image preview
+  const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
 
   const templateId = useParams().id;
 
   const template = templates.filter((tp) => tp.id === Number(templateId));
-  console.log(template);
+  //   console.log(template);
 
   //handling the logo image
   const handleLogoChange = (e) => {
@@ -45,6 +45,7 @@ const EditTemplate = () => {
   //handling the main image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file && file.size <= 10 * 1024 * 1024) {
       if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
         showToast(
@@ -73,7 +74,7 @@ const EditTemplate = () => {
     <div>
       {template[0]?.sections?.map((section) => {
         switch (section.type) {
-          //design for log input
+          //design for logo input
           case "logo":
             return (
               <div key={section.id} className={section.classes}>
@@ -90,6 +91,18 @@ const EditTemplate = () => {
                 )}
               </div>
             );
+          // design for the images
+
+          case "image":
+            return (
+              <div key={section.id} className={section.classes}>
+                <MainImageUploader
+                  handleImageChange={handleImageChange}
+                  image={image}
+                ></MainImageUploader>
+                {imagePreview && <img src={imagePreview} alt="Image Preview" />}
+              </div>
+            );
 
           //design for title field
           case "title":
@@ -98,6 +111,8 @@ const EditTemplate = () => {
                 {section.content}
               </h1>
             );
+
+          //design for the title content
           case "title-content":
             return (
               <p key={section.id} className={section.classes}>
@@ -110,17 +125,6 @@ const EditTemplate = () => {
                 <Link to={section.url}>
                   <button className={section.classes}>{section.content}</button>
                 </Link>
-              </div>
-            );
-
-          case "image":
-            return (
-              <div key={section.id} className={section.classes}>
-                <MainImageUploader
-                  handleImageChange={handleImageChange}
-                  image={image}
-                ></MainImageUploader>
-                {imagePreview && <img src={imagePreview} alt="Image Preview" />}
               </div>
             );
 
@@ -197,7 +201,7 @@ const templates = [
         id: 4,
         type: "image",
         url: "",
-        classes: "w-[700px] h-[500px] mx-auto my-4",
+        classes: "w-[700px] h-[100px] mx-auto my-4",
       },
       {
         id: 7,
