@@ -190,8 +190,9 @@ const EditTemplate = () => {
         {/*right side editing bar */}
         <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4">
           <div className="">
+            {/* text box  */}
             <p className="font-bold text-lg text-slate-700 mb-2">Text</p>
-            <div className=" rounded">
+            <div className="border border-slate-300 rounded-md px-3 py-2">
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
                   className="flex-1 px-3 py-2 font-bold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
@@ -219,7 +220,14 @@ const EditTemplate = () => {
                 </p>
               </div>
 
-              <div className=""></div>
+              {/* write the text here  */}
+              <div className="mt-4">
+                <textarea
+                  className="w-full text-sm bg-white outline-none  focus:outline-none rounded-md resize-none"
+                  defaultValue="Email has never been easier"
+                  rows="4"
+                ></textarea>
+              </div>
             </div>
           </div>
         </div>
