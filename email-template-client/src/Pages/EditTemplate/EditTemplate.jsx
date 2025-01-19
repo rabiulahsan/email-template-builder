@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router";
 import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploader";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -10,6 +10,9 @@ const EditTemplate = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
+  const [titleFocused, setTitleFocused] = useState(false);
+  const [textContent, setTextContent] = useState(""); // Content of the title
+  const titleRef = useRef(null);
 
   const templateId = useParams().id;
 
@@ -71,6 +74,19 @@ const EditTemplate = () => {
     }
   };
 
+  //handle title content
+  const handleTitleClick = () => {
+    setTitleFocused(true); // Enable editing
+    setTextContent(titleRef.current.innerText); // Set the title content in the textarea
+  };
+
+  const handleTextChange = (e) => {
+    setTextContent(e.target.value); // Update the state with the edited content
+    if (titleRef.current) {
+      titleRef.current.innerText = e.target.value; // Update the preview in real-time
+    }
+  };
+
   return (
     <div className=" bg-slate-200 p-[2%]">
       {/* top bar of the page  */}
@@ -129,9 +145,19 @@ const EditTemplate = () => {
                 //design for title field
                 case "title":
                   return (
-                    <h1 key={section.id} className={`${section.classes} mt-4`}>
-                      {section.content}
-                    </h1>
+                    <div key={section.id} className="w-[70%] mx-auto">
+                      <h1
+                        className={`${section.classes} mt-4 px-3 py-2 cursor-pointer`}
+                        onClick={handleTitleClick}
+                        ref={titleRef}
+                        contentEditable={titleFocused}
+                        onInput={(e) =>
+                          setTextContent(e.currentTarget.innerText)
+                        } // Update textarea in real-time
+                      >
+                        {section.content}
+                      </h1>
+                    </div>
                   );
 
                 //design for the title content
@@ -224,8 +250,10 @@ const EditTemplate = () => {
               <div className="mt-4">
                 <textarea
                   className="w-full text-sm bg-white outline-none  focus:outline-none rounded-md resize-none"
-                  defaultValue="Email has never been easier"
+                  placeholder="Select to change text"
                   rows="4"
+                  onChange={handleTextChange}
+                  value={titleFocused ? textContent : ""}
                 ></textarea>
               </div>
             </div>
@@ -254,7 +282,7 @@ const templates = [
       {
         id: 2,
         type: "title",
-        content: "Edit you Title for the Email",
+        content: "Edit your Title for the Email",
         classes: "text-4xl font-bold text-center",
       },
       {
