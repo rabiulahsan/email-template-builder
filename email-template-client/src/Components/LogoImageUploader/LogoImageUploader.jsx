@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-const LogoImageUploader = ({ handleFileChange, logo }) => {
+const LogoImageUploader = ({ handleLogoChange, logo }) => {
   return (
     <div>
       {!logo && (
         <div className="border-dashed border-2 text-center py-3">
           <input
             type="file"
-            onChange={handleFileChange}
+            onChange={handleLogoChange}
             className="hidden"
             id="file-upload"
             accept="image/*"

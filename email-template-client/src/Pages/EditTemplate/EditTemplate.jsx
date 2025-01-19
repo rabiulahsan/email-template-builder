@@ -12,7 +12,7 @@ const EditTemplate = () => {
   const template = templates.filter((tp) => tp.id === Number(templateId));
   console.log(template);
 
-  const handleFileChange = (e) => {
+  const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file && file.size <= 10 * 1024 * 1024) {
       if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
@@ -42,11 +42,12 @@ const EditTemplate = () => {
     <div>
       {template[0]?.sections?.map((section) => {
         switch (section.type) {
+          //design for log input
           case "logo":
             return (
               <div key={section.id} className={section.classes}>
                 <LogoImageUploader
-                  handleFileChange={handleFileChange}
+                  handleLogoChange={handleLogoChange}
                   logo={logo}
                 ></LogoImageUploader>
                 {preview && (
@@ -58,19 +59,14 @@ const EditTemplate = () => {
                 )}
               </div>
             );
-          //   case "title":
-          //     return (
-          //       <h1 key={section.id} className={section.classes}>
-          //         <input
-          //           type="text"
-          //           value={section.content}
-          //           placeholder="Title"
-          //           //   onChange={(e) =>
-          //           //     updateSection(section.id, { content: e.target.value })
-          //           //   }
-          //         />
-          //       </h1>
-          //     );
+
+          //design for title field
+          case "title":
+            return (
+              <h1 key={section.id} className={section.classes}>
+                {section.content}
+              </h1>
+            );
           //   case "content":
           //     return (
           //       <p key={section.id} className={section.classes}>
@@ -172,7 +168,7 @@ const templates = [
         id: 2,
         type: "title",
         content: "Edit you Title for the Email",
-        classes: "text-4xl font-bold text-center",
+        classes: "text-4xl font-bold text-center mt-4",
       },
       {
         id: 3,
