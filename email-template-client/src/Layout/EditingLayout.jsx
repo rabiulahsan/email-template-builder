@@ -1,5 +1,11 @@
+import { Outlet } from "react-router";
+
 const EditingLayout = () => {
-  return <div></div>;
+  return (
+    <>
+      <Outlet></Outlet>
+    </>
+  );
 };
 
 export default EditingLayout;
