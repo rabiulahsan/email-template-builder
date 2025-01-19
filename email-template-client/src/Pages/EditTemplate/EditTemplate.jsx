@@ -12,8 +12,6 @@ import {
 } from "react-icons/md";
 
 const EditTemplate = () => {
-  const [logo, setLogo] = useState(null);
-  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
 
@@ -87,8 +85,6 @@ const EditTemplate = () => {
                     <div key={section.id} className="mb-5">
                       <LogoImageUploader
                         setPreview={setPreview}
-                        logo={logo}
-                        setLogo={setLogo}
                       ></LogoImageUploader>
                       {preview && (
                         <img
@@ -106,8 +102,6 @@ const EditTemplate = () => {
                     <div key={section.id} className="">
                       <MainImageUploader
                         setImagePreview={setImagePreview}
-                        image={image}
-                        setImage={setImage}
                       ></MainImageUploader>
                       {imagePreview && (
                         <img
@@ -341,7 +335,7 @@ const EditTemplate = () => {
             {/* font color button  */}
             <div className="mt-5">
               <p className="text-slate-600 text-sm font-semibold mb-2">
-                Font Color
+                Text Color
               </p>
               <div className="flex gap-x-2 items-center">
                 {colorSamples.map((clr, idx) => (

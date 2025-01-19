@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import { toast } from "react-toastify";
-const LogoImageUploader = ({ setPreview, logo, setLogo }) => {
+const LogoImageUploader = ({ setPreview }) => {
+  const [logo, setLogo] = useState(null);
+
   //handling the logo image
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
