@@ -10,9 +10,16 @@ const EditTemplate = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
+
+  //for title
   const [titleFocused, setTitleFocused] = useState(false);
-  const [textContent, setTextContent] = useState(""); // Content of the title
+  const [titleText, setTitleText] = useState(""); // Content of the title
   const titleRef = useRef(null);
+
+  //for title descriptin
+  const [descFocused, setDescFocused] = useState(false);
+  const [descText, setDescText] = useState(""); // Content of the title
+  const descRef = useRef(null);
 
   const templateId = useParams().id;
 
@@ -22,13 +29,30 @@ const EditTemplate = () => {
   //handle title content
   const handleTitleClick = () => {
     setTitleFocused(true); // Enable editing
-    setTextContent(titleRef.current.innerText); // Set the title content in the textarea
+    setDescFocused(false);
+    setTitleText(titleRef.current.innerText); // Set the title content in the textarea
   };
 
-  const handleTextChange = (e) => {
-    setTextContent(e.target.value); // Update the state with the edited content
+  // text will be changed based on title
+  const handleTitleChange = (e) => {
+    setTitleText(e.target.value); // Update the state with the edited content
     if (titleRef.current) {
       titleRef.current.innerText = e.target.value; // Update the preview in real-time
+    }
+  };
+
+  //handle title content
+  const handleDescClick = () => {
+    setDescFocused(true); // Enable editing
+    setTitleFocused(false);
+    setDescText(descRef.current.innerText); // Set the title content in the textarea
+  };
+
+  //text will be changed based on description
+  const handleDescChange = (e) => {
+    setDescText(e.target.value); // Update the state with the edited content
+    if (descRef.current) {
+      descRef.current.innerText = e.target.value; // Update the preview in real-time
     }
   };
 
@@ -98,9 +122,7 @@ const EditTemplate = () => {
                         onClick={handleTitleClick}
                         ref={titleRef}
                         contentEditable={titleFocused}
-                        onInput={(e) =>
-                          setTextContent(e.currentTarget.innerText)
-                        } // Update textarea in real-time
+                        onInput={(e) => setTitleText(e.currentTarget.innerText)} // Update textarea in real-time
                       >
                         {section.content}
                       </h1>
@@ -108,11 +130,19 @@ const EditTemplate = () => {
                   );
 
                 //design for the title content
-                case "title-content":
+                case "title-desc":
                   return (
-                    <p key={section.id} className={section.classes}>
-                      {section.content}
-                    </p>
+                    <div className="w-[70%] mx-auto" key={section.id}>
+                      <p
+                        className={`${section.classes} cursor-pointer py-3 px-4 mt-4`}
+                        onClick={handleDescClick}
+                        ref={descRef}
+                        contentEditable={descFocused}
+                        onInput={(e) => setDescText(e.currentTarget.innerText)}
+                      >
+                        {section.content}
+                      </p>
+                    </div>
                   );
                 case "title-button":
                   return (
@@ -164,7 +194,13 @@ const EditTemplate = () => {
         <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4">
           <div className="">
             {/* text box  */}
-            <p className="font-bold text-lg text-slate-700 mb-2">Text</p>
+            <p className="font-bold text-lg text-slate-700 mb-2">
+              {titleFocused
+                ? "Title Text"
+                : descFocused
+                ? "Description Text"
+                : "Text"}
+            </p>
             <div className="border border-slate-300 rounded-md px-3 py-2">
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
@@ -196,11 +232,17 @@ const EditTemplate = () => {
               {/* write the text here  */}
               <div className="mt-4">
                 <textarea
-                  className="w-full text-sm bg-white outline-none  focus:outline-none rounded-md resize-none"
+                  className="w-full text-sm bg-white outline-none focus:outline-none rounded-md resize-none"
                   placeholder="Select to change text"
                   rows="4"
-                  onChange={handleTextChange}
-                  value={titleFocused ? textContent : ""}
+                  onChange={(e) => {
+                    if (titleFocused) {
+                      handleTitleChange(e);
+                    } else if (descFocused) {
+                      handleDescChange(e);
+                    }
+                  }}
+                  value={titleFocused ? titleText : descFocused ? descText : ""}
                 ></textarea>
               </div>
             </div>
@@ -234,9 +276,9 @@ const templates = [
       },
       {
         id: 3,
-        type: "title-content",
+        type: "title-desc",
         content: "Event details here...",
-        classes: "text-base text-center mt-4 text-slate-600",
+        classes: "text-base text-center text-slate-600",
       },
       {
         id: 5,
