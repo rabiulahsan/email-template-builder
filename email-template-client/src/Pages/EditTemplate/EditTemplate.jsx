@@ -83,110 +83,147 @@ const EditTemplate = () => {
         <p className=" font-bold text-slate-700 text-lg">{template[0].name}</p>
       </div>
 
-      {/* editing template preview  */}
-      <div className=" flex justify-center items-center bg-slate-200 w-[70%] rounded border border-slate-400 py-5">
-        <div className="w-[70%] mx-auto bg-white py-[4%]">
-          {template[0]?.sections?.map((section) => {
-            switch (section.type) {
-              //design for logo input
-              case "logo":
-                return (
-                  <div key={section.id} className="mb-5">
-                    <LogoImageUploader
-                      handleLogoChange={handleLogoChange}
-                      logo={logo}
-                    ></LogoImageUploader>
-                    {preview && (
-                      <img
-                        src={preview}
-                        alt="Logo Preview"
-                        className={section.classes}
-                      />
-                    )}
-                  </div>
-                );
+      <div className="flex items-start gap-x-5">
+        {/* editing template preview  */}
+        <div className=" flex justify-center items-center bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
+          {/* it is the main template  */}
+          <div className="w-[70%] mx-auto bg-white py-[4%] rounded-md">
+            {template[0]?.sections?.map((section) => {
+              switch (section.type) {
+                //design for logo input
+                case "logo":
+                  return (
+                    <div key={section.id} className="mb-5">
+                      <LogoImageUploader
+                        handleLogoChange={handleLogoChange}
+                        logo={logo}
+                      ></LogoImageUploader>
+                      {preview && (
+                        <img
+                          src={preview}
+                          alt="Logo Preview"
+                          className={section.classes}
+                        />
+                      )}
+                    </div>
+                  );
 
-              // design for the images
-              case "image":
-                return (
-                  <div key={section.id} className="">
-                    <MainImageUploader
-                      handleImageChange={handleImageChange}
-                      image={image}
-                    ></MainImageUploader>
-                    {imagePreview && (
-                      <img
-                        src={imagePreview}
-                        alt="Image Preview"
-                        className={section.classes}
-                      />
-                    )}
-                  </div>
-                );
+                // design for the images
+                case "image":
+                  return (
+                    <div key={section.id} className="">
+                      <MainImageUploader
+                        handleImageChange={handleImageChange}
+                        image={image}
+                      ></MainImageUploader>
+                      {imagePreview && (
+                        <img
+                          src={imagePreview}
+                          alt="Image Preview"
+                          className={section.classes}
+                        />
+                      )}
+                    </div>
+                  );
 
-              //design for title field
-              case "title":
-                return (
-                  <h1 key={section.id} className={`${section.classes} mt-4`}>
-                    {section.content}
-                  </h1>
-                );
+                //design for title field
+                case "title":
+                  return (
+                    <h1 key={section.id} className={`${section.classes} mt-4`}>
+                      {section.content}
+                    </h1>
+                  );
 
-              //design for the title content
-              case "title-content":
-                return (
-                  <p key={section.id} className={section.classes}>
-                    {section.content}
-                  </p>
-                );
-              case "title-button":
-                return (
-                  <div
-                    key={section.id}
-                    className="flex justify-center items-center my-6"
-                  >
-                    <Link to={section.url}>
-                      <button className={section.classes}>
-                        {section.content}
-                      </button>
-                    </Link>
-                  </div>
-                );
+                //design for the title content
+                case "title-content":
+                  return (
+                    <p key={section.id} className={section.classes}>
+                      {section.content}
+                    </p>
+                  );
+                case "title-button":
+                  return (
+                    <div
+                      key={section.id}
+                      className="flex justify-center items-center my-6"
+                    >
+                      <Link to={section.url}>
+                        <button className={section.classes}>
+                          {section.content}
+                        </button>
+                      </Link>
+                    </div>
+                  );
 
-              //   case "footer":
-              //     return (
-              //       <footer key={section.id} className={section.classes}>
-              //         <input
-              //           type="text"
-              //           value={section.content}
-              //           placeholder="Footer Text"
-              //           //   onChange={(e) =>
-              //           //     updateSection(section.id, { content: e.target.value })
-              //           //   }
-              //         />
-              //       </footer>
-              //     );
-              //   case "social":
-              //     return (
-              //       <div key={section.id} className={section.classes}>
-              //         {section.links.map((link, idx) => (
-              //           <a key={idx} href={link.url}>
-              //             {link.platform}
-              //           </a>
-              //         ))}
-              //       </div>
-              //     );
-              //   case "divider":
-              //     return <hr key={section.id} className={section.classes} />;
-              default:
-                return null;
-            }
-          })}
+                //   case "footer":
+                //     return (
+                //       <footer key={section.id} className={section.classes}>
+                //         <input
+                //           type="text"
+                //           value={section.content}
+                //           placeholder="Footer Text"
+                //           //   onChange={(e) =>
+                //           //     updateSection(section.id, { content: e.target.value })
+                //           //   }
+                //         />
+                //       </footer>
+                //     );
+                //   case "social":
+                //     return (
+                //       <div key={section.id} className={section.classes}>
+                //         {section.links.map((link, idx) => (
+                //           <a key={idx} href={link.url}>
+                //             {link.platform}
+                //           </a>
+                //         ))}
+                //       </div>
+                //     );
+                //   case "divider":
+                //     return <hr key={section.id} className={section.classes} />;
+                default:
+                  return null;
+              }
+            })}
+          </div>
+        </div>
+
+        {/*right side editing bar */}
+        <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4">
+          <div className="">
+            <p className="font-bold text-lg text-slate-700 mb-2">Text</p>
+            <div className=" rounded">
+              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
+                <p
+                  className="flex-1 px-3 py-2 font-bold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Bold"
+                >
+                  B
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 italic text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Italic"
+                >
+                  I
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 underline text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Underline"
+                >
+                  U
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 line-through text-center hover:bg-slate-100 cursor-pointer"
+                  title="Strikethrough"
+                >
+                  T
+                </p>
+              </div>
+
+              <div className=""></div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/*right side editing bar */}
-      <div className=""></div>
     </div>
   );
 };
