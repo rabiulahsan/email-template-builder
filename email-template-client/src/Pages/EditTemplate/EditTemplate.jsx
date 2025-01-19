@@ -62,39 +62,61 @@ const EditTemplate = () => {
     }
   };
 
-  // Define state variables for style categories
-  const [alignment, setAlignment] = useState(""); // text-left, text-center, etc.
-  const [decorations, setDecorations] = useState([]); // Multiple decorations
-  const [size, setSize] = useState(""); // Font size (e.g., text-xl)
-  const initialClass =
-    "text-4xl font-bold text-center mt-4 px-3 py-2 cursor-pointer";
+  const [initialClass, setInitialClass] = useState(
+    "text-4xl font-bold text-center mt-4 px-3 py-2 cursor-pointer"
+  );
 
   // Handle alignment click (single-choice)
   const handleAlignmentClick = (alignClass) => {
-    setAlignment((prev) => (prev === alignClass ? "" : alignClass)); // Toggle
+    setInitialClass((prev) => {
+      const alignmentClasses = [
+        "text-center",
+        "text-justify",
+        "text-left",
+        "text-right",
+      ];
+
+      const filteredClasses = prev
+        .split(" ")
+        .filter((cls) => !alignmentClasses.includes(cls))
+        .join(" ");
+
+      return `${filteredClasses} ${alignClass}`.trim();
+    });
   };
 
   // Handle decoration click (multiple-choice)
   const handleDecorationClick = (decorClass) => {
-    setDecorations((prev) => {
-      if (prev.includes(decorClass)) {
-        return prev.filter((item) => item !== decorClass); // Remove if exists
-      }
-      return [...prev, decorClass]; // Add if not exists
-    });
+    const clsArr = initialClass.split(" "); // Split into array
+    const newCls = clsArr.includes(decorClass)
+      ? clsArr.filter((cls) => cls !== decorClass).join(" ") // Remove class
+      : [...clsArr, decorClass].join(" "); // Add class
+    setInitialClass(newCls); // Update the state with the new class list
   };
 
   // Handle size click (single-choice)
   const handleSizeClick = (sizeClass) => {
-    setSize((prev) => (prev === sizeClass ? "" : sizeClass)); // Toggle
+    setInitialClass((prev) => {
+      const sizeClasses = [
+        "text-sm",
+        "text-base",
+        "text-lg",
+        "text-xl",
+        "text-2xl",
+        "text-3xl",
+        "text-4xl",
+      ];
+
+      const filteredClasses = prev
+        .split(" ")
+        .filter((cls) => !sizeClasses.includes(cls))
+        .join(" ");
+
+      return `${filteredClasses} ${sizeClass}`.trim();
+    });
   };
 
-  // Combine styles dynamically
-  const combinedClasses = `text-4xl font-bold text-center ${alignment} ${decorations.join(
-    " "
-  )} ${size} mt-4 px-3 py-2 cursor-pointer`;
-
-  console.log(combinedClasses);
+  console.log(initialClass);
 
   return (
     <div className=" bg-slate-200 p-[2%]">
@@ -154,7 +176,7 @@ const EditTemplate = () => {
                   return (
                     <div key={section.id} className="w-[70%] mx-auto">
                       <h1
-                        className={`${combinedClasses}`}
+                        className={`${initialClass}`}
                         onClick={handleTitleClick}
                         ref={titleRef}
                         contentEditable={titleFocused}
@@ -241,7 +263,7 @@ const EditTemplate = () => {
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
                   className={`flex-1 px-3 py-2 font-bold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    decorations.includes("font-bold") ? "bg-slate-100" : ""
+                    initialClass.includes("font-bold") ? "bg-slate-100" : ""
                   }`}
                   title="Bold"
                   onClick={() => handleDecorationClick("font-bold")}
@@ -250,7 +272,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 italic text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    decorations.includes("italic") ? "bg-slate-100" : ""
+                    initialClass.includes("italic") ? "bg-slate-100" : ""
                   }`}
                   title="Italic"
                   onClick={() => handleDecorationClick("italic")}
@@ -259,7 +281,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 underline text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    decorations.includes("underline") ? "bg-slate-100" : ""
+                    initialClass.includes("underline") ? "bg-slate-100" : ""
                   }`}
                   title="Underline"
                   onClick={() => handleDecorationClick("underline")}
@@ -268,7 +290,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 line-through text-center hover:bg-slate-100 cursor-pointer ${
-                    decorations.includes("line-through") ? "bg-slate-100" : ""
+                    initialClass.includes("line-through") ? "bg-slate-100" : ""
                   }`}
                   title="Strikethrough"
                   onClick={() => handleDecorationClick("line-through")}
@@ -303,7 +325,7 @@ const EditTemplate = () => {
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
                   className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    alignment === "text-left" ? "bg-slate-200" : ""
+                    initialClass.includes("text-left") ? "bg-slate-200" : ""
                   }`}
                   title="Left"
                   onClick={() => handleAlignmentClick("text-left")}
@@ -312,7 +334,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    alignment === "text-right" ? "bg-slate-200" : ""
+                    initialClass.includes("text-right") ? "bg-slate-200" : ""
                   }`}
                   title="Right"
                   onClick={() => handleAlignmentClick("text-right")}
@@ -321,7 +343,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    alignment === "text-center" ? "bg-slate-200" : ""
+                    initialClass.includes("text-center") ? "bg-slate-200" : ""
                   }`}
                   title="Center"
                   onClick={() => handleAlignmentClick("text-center")}
@@ -330,7 +352,7 @@ const EditTemplate = () => {
                 </p>
                 <p
                   className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 cursor-pointer flex justify-center items-center ${
-                    alignment === "text-justify" ? "bg-slate-200" : ""
+                    initialClass.includes("text-justify") ? "bg-slate-200" : ""
                   }`}
                   title="Justify"
                   onClick={() => handleAlignmentClick("text-justify")}
@@ -347,42 +369,54 @@ const EditTemplate = () => {
               </p>
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-sm") ? "bg-slate-100" : ""
+                  }`}
                   title="Small"
                   onClick={() => handleSizeClick("text-sm")}
                 >
                   sm
                 </p>
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-base") ? "bg-slate-100" : ""
+                  }`}
                   title="Base"
                   onClick={() => handleSizeClick("text-base")}
                 >
                   md
                 </p>
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-lg") ? "bg-slate-100" : ""
+                  }`}
                   title="Large"
                   onClick={() => handleSizeClick("text-lg")}
                 >
                   lg
                 </p>
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-xl") ? "bg-slate-100" : ""
+                  }`}
                   title="Exltra Large"
                   onClick={() => handleSizeClick("text-xl")}
                 >
                   xl
                 </p>
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-2xl") ? "bg-slate-100" : ""
+                  }`}
                   title="2 x Extra Large"
                   onClick={() => handleSizeClick("text-2xl")}
                 >
                   2xl
                 </p>
                 <p
-                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
+                    initialClass.includes("text-3xl") ? "bg-slate-100" : ""
+                  }`}
                   title="3 x Extra Large"
                   onClick={() => handleSizeClick("text-3xl")}
                 >
@@ -390,7 +424,9 @@ const EditTemplate = () => {
                 </p>
 
                 <p
-                  className="flex-1 px-3 py-2 font-semibold  text-center hover:bg-slate-100 cursor-pointer"
+                  className={`flex-1 px-3 py-2 font-semibold  text-center hover:bg-slate-100 cursor-pointer ${
+                    initialClass.includes("text-4xl") ? "bg-slate-100" : ""
+                  }`}
                   title="4 x Extra Large"
                   onClick={() => handleSizeClick("text-4xl")}
                 >
