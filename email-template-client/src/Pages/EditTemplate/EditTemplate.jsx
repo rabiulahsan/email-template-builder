@@ -240,7 +240,7 @@ const EditTemplate = () => {
                 <textarea
                   className="w-full text-sm bg-white outline-none focus:outline-none rounded-md resize-none"
                   placeholder="Select to change text"
-                  rows="4"
+                  rows="6"
                   onChange={(e) => {
                     if (titleFocused) {
                       handleTitleChange(e);
@@ -285,6 +285,60 @@ const EditTemplate = () => {
                 </p>
               </div>
             </div>
+
+            {/* Font size button  */}
+            <div className="mt-5">
+              <p className="text-slate-600 text-sm font-semibold mb-2">
+                Font Size
+              </p>
+              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Small"
+                >
+                  sm
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Base"
+                >
+                  md
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Large"
+                >
+                  lg
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="Exltra Large"
+                >
+                  xl
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="2 x Extra Large"
+                >
+                  2xl
+                </p>
+                <p
+                  className="flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer"
+                  title="3 x Extra Large"
+                >
+                  3xl
+                </p>
+
+                <p
+                  className="flex-1 px-3 py-2 font-semibold  text-center hover:bg-slate-100 cursor-pointer"
+                  title="4 x Extra Large"
+                >
+                  4xl
+                </p>
+              </div>
+            </div>
+
+            {/* font color button  */}
           </div>
         </div>
       </div>
