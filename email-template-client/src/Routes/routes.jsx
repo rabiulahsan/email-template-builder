@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
     element: <EditingLayout></EditingLayout>,
     children: [
       {
-        path: "/edit/template",
+        path: "/edit/template/:id",
         element: <EditTemplate></EditTemplate>,
       },
     ],
