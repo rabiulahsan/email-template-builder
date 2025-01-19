@@ -3,7 +3,7 @@ const LogoImageUploader = ({ handleLogoChange, logo }) => {
   return (
     <div>
       {!logo && (
-        <div className="border-dashed border-2 text-center py-3">
+        <div className="border-dashed border-2 border-slate-400 text-center py-3 w-[100px] mx-auto">
           <input
             type="file"
             onChange={handleLogoChange}

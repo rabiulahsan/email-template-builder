@@ -3,7 +3,7 @@ const MainImageUploader = ({ handleImageChange, image }) => {
   return (
     <div>
       {!image && (
-        <div className="border-dashed border-2 border-slate-500 text-center py-3 h-[300px]  flex items-center justify-center">
+        <div className="border-dashed border-2 border-slate-500 text-center py-3 mx-auto my-8 w-[400px]  h-[300px]  flex items-center justify-center">
           <div className="">
             <input
               type="file"

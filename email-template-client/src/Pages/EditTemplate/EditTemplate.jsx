@@ -3,6 +3,7 @@ import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploa
 import { useState } from "react";
 import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 const EditTemplate = () => {
   const [logo, setLogo] = useState(null);
@@ -71,92 +72,121 @@ const EditTemplate = () => {
   };
 
   return (
-    <div>
-      {template[0]?.sections?.map((section) => {
-        switch (section.type) {
-          //design for logo input
-          case "logo":
-            return (
-              <div key={section.id} className={section.classes}>
-                <LogoImageUploader
-                  handleLogoChange={handleLogoChange}
-                  logo={logo}
-                ></LogoImageUploader>
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Logo Preview"
-                    className=" border border-slate-400 w-[60px] h-[60px] object-contain"
-                  />
-                )}
-              </div>
-            );
-          // design for the images
+    <div className=" bg-slate-200 p-[2%]">
+      {/* top bar of the page  */}
+      <div className="flex items-center gap-x-5 mb-5">
+        <Link to="/templates">
+          <p className=" bg-orange-100 hover:bg-orange-200 cursor-pointer font-bold text-orange-500 p-3 rounded-full">
+            <FaArrowLeftLong size={20} />
+          </p>
+        </Link>
+        <p className=" font-bold text-slate-700 text-lg">{template[0].name}</p>
+      </div>
 
-          case "image":
-            return (
-              <div key={section.id} className={section.classes}>
-                <MainImageUploader
-                  handleImageChange={handleImageChange}
-                  image={image}
-                ></MainImageUploader>
-                {imagePreview && <img src={imagePreview} alt="Image Preview" />}
-              </div>
-            );
+      {/* editing template preview  */}
+      <div className=" flex justify-center items-center bg-slate-200 w-[70%] rounded border border-slate-400 py-5">
+        <div className="w-[70%] mx-auto bg-white py-[4%]">
+          {template[0]?.sections?.map((section) => {
+            switch (section.type) {
+              //design for logo input
+              case "logo":
+                return (
+                  <div key={section.id} className="mb-5">
+                    <LogoImageUploader
+                      handleLogoChange={handleLogoChange}
+                      logo={logo}
+                    ></LogoImageUploader>
+                    {preview && (
+                      <img
+                        src={preview}
+                        alt="Logo Preview"
+                        className={section.classes}
+                      />
+                    )}
+                  </div>
+                );
 
-          //design for title field
-          case "title":
-            return (
-              <h1 key={section.id} className={section.classes}>
-                {section.content}
-              </h1>
-            );
+              // design for the images
+              case "image":
+                return (
+                  <div key={section.id} className="">
+                    <MainImageUploader
+                      handleImageChange={handleImageChange}
+                      image={image}
+                    ></MainImageUploader>
+                    {imagePreview && (
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        className={section.classes}
+                      />
+                    )}
+                  </div>
+                );
 
-          //design for the title content
-          case "title-content":
-            return (
-              <p key={section.id} className={section.classes}>
-                {section.content}
-              </p>
-            );
-          case "title-button":
-            return (
-              <div key={section.id}>
-                <Link to={section.url}>
-                  <button className={section.classes}>{section.content}</button>
-                </Link>
-              </div>
-            );
+              //design for title field
+              case "title":
+                return (
+                  <h1 key={section.id} className={`${section.classes} mt-4`}>
+                    {section.content}
+                  </h1>
+                );
 
-          //   case "footer":
-          //     return (
-          //       <footer key={section.id} className={section.classes}>
-          //         <input
-          //           type="text"
-          //           value={section.content}
-          //           placeholder="Footer Text"
-          //           //   onChange={(e) =>
-          //           //     updateSection(section.id, { content: e.target.value })
-          //           //   }
-          //         />
-          //       </footer>
-          //     );
-          //   case "social":
-          //     return (
-          //       <div key={section.id} className={section.classes}>
-          //         {section.links.map((link, idx) => (
-          //           <a key={idx} href={link.url}>
-          //             {link.platform}
-          //           </a>
-          //         ))}
-          //       </div>
-          //     );
-          //   case "divider":
-          //     return <hr key={section.id} className={section.classes} />;
-          default:
-            return null;
-        }
-      })}
+              //design for the title content
+              case "title-content":
+                return (
+                  <p key={section.id} className={section.classes}>
+                    {section.content}
+                  </p>
+                );
+              case "title-button":
+                return (
+                  <div
+                    key={section.id}
+                    className="flex justify-center items-center my-6"
+                  >
+                    <Link to={section.url}>
+                      <button className={section.classes}>
+                        {section.content}
+                      </button>
+                    </Link>
+                  </div>
+                );
+
+              //   case "footer":
+              //     return (
+              //       <footer key={section.id} className={section.classes}>
+              //         <input
+              //           type="text"
+              //           value={section.content}
+              //           placeholder="Footer Text"
+              //           //   onChange={(e) =>
+              //           //     updateSection(section.id, { content: e.target.value })
+              //           //   }
+              //         />
+              //       </footer>
+              //     );
+              //   case "social":
+              //     return (
+              //       <div key={section.id} className={section.classes}>
+              //         {section.links.map((link, idx) => (
+              //           <a key={idx} href={link.url}>
+              //             {link.platform}
+              //           </a>
+              //         ))}
+              //       </div>
+              //     );
+              //   case "divider":
+              //     return <hr key={section.id} className={section.classes} />;
+              default:
+                return null;
+            }
+          })}
+        </div>
+      </div>
+
+      {/*right side editing bar */}
+      <div className=""></div>
     </div>
   );
 };
@@ -174,13 +204,13 @@ const templates = [
         id: 1,
         type: "logo",
         url: "/",
-        classes: "w-[100px]  mx-auto",
+        classes: "mx-auto w-[100px] h-[60px] object-contain",
       },
       {
         id: 2,
         type: "title",
         content: "Edit you Title for the Email",
-        classes: "text-4xl font-bold text-center mt-4",
+        classes: "text-4xl font-bold text-center",
       },
       {
         id: 3,
@@ -201,7 +231,7 @@ const templates = [
         id: 4,
         type: "image",
         url: "",
-        classes: "w-[700px] h-[100px] mx-auto my-4",
+        classes: " h-[400px] mx-auto my-4 object-contain",
       },
       {
         id: 7,
