@@ -15,6 +15,9 @@ const EditTemplate = () => {
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
 
+  //for color picker
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
   //for title
 
   const [titleFocused, setTitleFocused] = useState(false);
@@ -133,6 +136,17 @@ const EditTemplate = () => {
     }
   };
 
+  //handle the color for text
+  const handleColorClick = (colorClass) => {
+    if (titleFocused) {
+      //add style color to titleRef
+      titleRef.current.style.color = colorClass;
+    } else if (descFocused) {
+      //add style color to descRef
+      descRef.current.style.color = colorClass;
+    }
+  };
+
   // Helper function to update a class (single-choice)
   const updateClass = (prev, newClass, replaceClasses) => {
     const filteredClasses = prev
@@ -152,7 +166,7 @@ const EditTemplate = () => {
     }
   };
 
-  // console.log(initialClass);
+  console.log(initialClass);
 
   return (
     <div className=" bg-slate-200 p-[2%]">
@@ -238,6 +252,8 @@ const EditTemplate = () => {
                       </p>
                     </div>
                   );
+
+                // design for button in the template
                 case "title-button":
                   return (
                     <div
@@ -295,6 +311,8 @@ const EditTemplate = () => {
                 ? "Description Text"
                 : "Text"}
             </p>
+
+            {/* decoration options  */}
             <div className="border border-slate-300 rounded-md px-3 py-2">
               <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
                 <p
@@ -602,11 +620,31 @@ const EditTemplate = () => {
                     style={{ backgroundColor: clr.color }}
                     className="rounded w-[40px] h-[40px] cursor-pointer"
                     key={idx}
+                    onClick={() => handleColorClick(clr.color)}
                   ></div>
                 ))}
-                <div className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer">
+
+                {/* color picker button */}
+                <div
+                  onClick={() => setShowColorPicker(!showColorPicker)}
+                  className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+                >
                   +
                 </div>
+
+                {/* Color Picker */}
+                {showColorPicker && (
+                  <div className="absolute mt-2 p-2 border rounded bg-white shadow">
+                    <input
+                      type="color"
+                      onChange={(e) => {
+                        const selectedColor = e.target.value;
+                        handleColorClick(selectedColor);
+                        setShowColorPicker(false); // Close color picker after selection
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
