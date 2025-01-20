@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router";
 import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploader";
 import { useRef, useState } from "react";
+import { SketchPicker } from "react-color";
 // import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -17,6 +18,7 @@ const EditTemplate = () => {
 
   //for color picker
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [color, setColor] = useState("#000000");
 
   //for title
 
@@ -39,6 +41,7 @@ const EditTemplate = () => {
   const handleTitleClick = () => {
     setTitleFocused(true); // Enable editing
     setDescFocused(false);
+    setShowColorPicker(false);
     setTitleText(titleRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -54,6 +57,7 @@ const EditTemplate = () => {
   const handleDescClick = () => {
     setDescFocused(true); // Enable editing
     setTitleFocused(false);
+    setShowColorPicker(false);
     setDescText(descRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -138,10 +142,10 @@ const EditTemplate = () => {
 
   //handle the color for text
   const handleColorClick = (colorClass) => {
-    if (titleFocused) {
+    if (titleFocused && titleRef.current) {
       //add style color to titleRef
       titleRef.current.style.color = colorClass;
-    } else if (descFocused) {
+    } else if (descFocused && descRef.current) {
       //add style color to descRef
       descRef.current.style.color = colorClass;
     }
@@ -629,18 +633,20 @@ const EditTemplate = () => {
                   onClick={() => setShowColorPicker(!showColorPicker)}
                   className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer"
                 >
-                  +
+                  {showColorPicker ? "x" : "+"}
                 </div>
 
                 {/* Color Picker */}
                 {showColorPicker && (
                   <div className="absolute mt-2 p-2 border rounded bg-white shadow">
-                    <input
-                      type="color"
-                      onChange={(e) => {
-                        const selectedColor = e.target.value;
-                        handleColorClick(selectedColor);
-                        setShowColorPicker(false); // Close color picker after selection
+                    <SketchPicker
+                      color={color} // Current color state
+                      onChange={(color) => {
+                        setColor(color.hex); // Update the current color state
+                        handleColorClick(color.hex); // Apply the color dynamically
+                      }}
+                      onChangeComplete={(color) => {
+                        console.log("Final color selected:", color.hex); // Optional: Log the final color
                       }}
                     />
                   </div>
