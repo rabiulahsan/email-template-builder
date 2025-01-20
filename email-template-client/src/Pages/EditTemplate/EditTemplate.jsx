@@ -62,58 +62,94 @@ const EditTemplate = () => {
     }
   };
 
+  //state for initial class
   const [initialClass, setInitialClass] = useState(
     "text-4xl font-bold text-center mt-4 px-3 py-2 cursor-pointer"
   );
 
+  //state for description initial class
+  const [initialDescClass, setInitialDescClass] = useState(
+    "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
+  );
+
   // Handle alignment click (single-choice)
   const handleAlignmentClick = (alignClass) => {
-    setInitialClass((prev) => {
-      const alignmentClasses = [
-        "text-center",
-        "text-justify",
-        "text-left",
-        "text-right",
-      ];
-
-      const filteredClasses = prev
-        .split(" ")
-        .filter((cls) => !alignmentClasses.includes(cls))
-        .join(" ");
-
-      return `${filteredClasses} ${alignClass}`.trim();
-    });
+    if (titleFocused) {
+      setInitialClass((prev) =>
+        updateClass(prev, alignClass, [
+          "text-center",
+          "text-justify",
+          "text-left",
+          "text-right",
+        ])
+      );
+    } else if (descFocused) {
+      setInitialDescClass((prev) =>
+        updateClass(prev, alignClass, [
+          "text-center",
+          "text-justify",
+          "text-left",
+          "text-right",
+        ])
+      );
+    }
   };
 
   // Handle decoration click (multiple-choice)
   const handleDecorationClick = (decorClass) => {
-    const clsArr = initialClass.split(" "); // Split into array
-    const newCls = clsArr.includes(decorClass)
-      ? clsArr.filter((cls) => cls !== decorClass).join(" ") // Remove class
-      : [...clsArr, decorClass].join(" "); // Add class
-    setInitialClass(newCls); // Update the state with the new class list
+    if (titleFocused) {
+      setInitialClass((prev) => toggleClass(prev, decorClass));
+    } else if (descFocused) {
+      setInitialDescClass((prev) => toggleClass(prev, decorClass));
+    }
   };
 
   // Handle size click (single-choice)
   const handleSizeClick = (sizeClass) => {
-    setInitialClass((prev) => {
-      const sizeClasses = [
-        "text-sm",
-        "text-base",
-        "text-lg",
-        "text-xl",
-        "text-2xl",
-        "text-3xl",
-        "text-4xl",
-      ];
+    if (titleFocused) {
+      setInitialClass((prev) =>
+        updateClass(prev, sizeClass, [
+          "text-sm",
+          "text-base",
+          "text-lg",
+          "text-xl",
+          "text-2xl",
+          "text-3xl",
+          "text-4xl",
+        ])
+      );
+    } else if (descFocused) {
+      setInitialDescClass((prev) =>
+        updateClass(prev, sizeClass, [
+          "text-sm",
+          "text-base",
+          "text-lg",
+          "text-xl",
+          "text-2xl",
+          "text-3xl",
+          "text-4xl",
+        ])
+      );
+    }
+  };
 
-      const filteredClasses = prev
-        .split(" ")
-        .filter((cls) => !sizeClasses.includes(cls))
-        .join(" ");
+  // Helper function to update a class (single-choice)
+  const updateClass = (prev, newClass, replaceClasses) => {
+    const filteredClasses = prev
+      .split(" ")
+      .filter((cls) => !replaceClasses.includes(cls))
+      .join(" ");
+    return `${filteredClasses} ${newClass}`.trim();
+  };
 
-      return `${filteredClasses} ${sizeClass}`.trim();
-    });
+  // Helper function to toggle a class (multiple-choice)
+  const toggleClass = (prev, toggleClass) => {
+    const clsArr = prev.split(" ");
+    if (clsArr.includes(toggleClass)) {
+      return clsArr.filter((cls) => cls !== toggleClass).join(" "); // Remove class
+    } else {
+      return [...clsArr, toggleClass].join(" "); // Add class
+    }
   };
 
   console.log(initialClass);
@@ -192,7 +228,7 @@ const EditTemplate = () => {
                   return (
                     <div className="w-[70%] mx-auto" key={section.id}>
                       <p
-                        className={`${section.classes} cursor-pointer py-3 px-4 mt-4`}
+                        className={`${initialDescClass} `}
                         onClick={handleDescClick}
                         ref={descRef}
                         contentEditable={descFocused}
