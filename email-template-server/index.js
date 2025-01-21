@@ -75,7 +75,7 @@ const templates = [
         id: 4,
         type: "image",
         url: "",
-        classes: " h-[400px] mx-auto my-4 object-contain",
+        classes: "mx-auto my-4 object-contain",
       },
       {
         id: 7,

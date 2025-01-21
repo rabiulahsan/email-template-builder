@@ -16,6 +16,7 @@ const EditTemplate = () => {
   const [template, setTemplate] = useState([]); // For the selected template
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
+  const templateRef = useRef(null); // Reference to the template div
 
   //for color picker
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -316,7 +317,36 @@ const EditTemplate = () => {
     }
   };
 
-  console.log(initialClass);
+  // console.log(initialClass);
+
+  //function for handle downloading
+  const handleSaveandDownload = () => {
+    const contentToSave = templateRef.current.innerHTML;
+
+    const fullHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Template</title>
+        <!-- Include Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-gray-100">
+        ${contentToSave}
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob([fullHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "template.html";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className=" bg-slate-200 p-[2%]">
@@ -332,139 +362,140 @@ const EditTemplate = () => {
 
       <div className="flex items-start gap-x-5">
         {/* editing template preview  */}
-        <div className=" flex justify-center items-center bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
+        <div className="  bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
           {/* it is the main template  */}
-          <div className="w-[70%] mx-auto bg-white pt-[4%] rounded-md">
-            {template?.sections?.map((section) => {
-              switch (section.type) {
-                //design for logo input
-                case "logo":
-                  return (
-                    <div key={section.id} className="mb-5">
-                      <LogoImageUploader
-                        setPreview={setPreview}
-                      ></LogoImageUploader>
-                      {preview && (
-                        <img
-                          src={preview}
-                          alt="Logo Preview"
-                          className={section.classes}
-                        />
-                      )}
-                    </div>
-                  );
+          <div className="flex justify-center items-center " ref={templateRef}>
+            <div
+              ref={templateRef}
+              className="w-[70%] mx-auto bg-white pt-[4%] rounded-md"
+            >
+              {template?.sections?.map((section) => {
+                switch (section.type) {
+                  //design for logo input
+                  case "logo":
+                    return (
+                      <div key={section.id} className="mb-5">
+                        <LogoImageUploader
+                          setPreview={setPreview}
+                        ></LogoImageUploader>
+                        {preview && (
+                          <img
+                            src={preview}
+                            alt="Logo Preview"
+                            className={section.classes}
+                          />
+                        )}
+                      </div>
+                    );
 
-                // design for the images
-                case "image":
-                  return (
-                    <div key={section.id} className="">
-                      <MainImageUploader
-                        setImagePreview={setImagePreview}
-                      ></MainImageUploader>
-                      {imagePreview && (
-                        <img
-                          src={imagePreview}
-                          alt="Image Preview"
-                          className={section.classes}
-                        />
-                      )}
-                    </div>
-                  );
+                  // design for the images
+                  case "image":
+                    return (
+                      <div key={section.id} className="">
+                        <MainImageUploader
+                          setImagePreview={setImagePreview}
+                        ></MainImageUploader>
+                        {imagePreview && (
+                          <img
+                            src={imagePreview}
+                            alt="Image Preview"
+                            className={section.classes}
+                          />
+                        )}
+                      </div>
+                    );
 
-                //design for title field
-                case "title":
-                  return (
-                    <div key={section.id} className="w-[70%] mx-auto">
-                      <h1
-                        className={`${initialClass}`}
-                        onClick={handleTitleClick}
-                        ref={titleRef}
-                        contentEditable={titleFocused}
-                        onInput={(e) => setTitleText(e.currentTarget.innerText)} // Update textarea in real-time
+                  //design for title field
+                  case "title":
+                    return (
+                      <div key={section.id} className="w-[70%] mx-auto">
+                        <h1
+                          className={`${initialClass}`}
+                          onClick={handleTitleClick}
+                          ref={titleRef}
+                          contentEditable={titleFocused}
+                          onInput={(e) =>
+                            setTitleText(e.currentTarget.innerText)
+                          } // Update textarea in real-time
+                        >
+                          {section.content}
+                        </h1>
+                      </div>
+                    );
+
+                  //design for the title content
+                  case "title-desc":
+                    return (
+                      <div className="w-[70%] mx-auto" key={section.id}>
+                        <p
+                          className={`${initialDescClass} `}
+                          onClick={handleDescClick}
+                          ref={descRef}
+                        >
+                          {section.content}
+                        </p>
+                      </div>
+                    );
+
+                  // design for button in the template
+                  case "title-button":
+                    return (
+                      <div
+                        key={section.id}
+                        className="flex justify-center items-center my-6"
                       >
-                        {section.content}
-                      </h1>
-                    </div>
-                  );
+                        <a
+                          href=""
+                          className={initialButtonClass}
+                          onClick={handleBtnClick}
+                          ref={buttonRef}
+                          contentEditable={buttonFocused}
+                          onInput={(e) =>
+                            setButtonText(e.currentTarget.innerText)
+                          }
+                        >
+                          {section.content}
+                        </a>
+                      </div>
+                    );
 
-                //design for the title content
-                case "title-desc":
-                  return (
-                    <div className="w-[70%] mx-auto" key={section.id}>
-                      <p
-                        className={`${initialDescClass} `}
-                        onClick={handleDescClick}
-                        ref={descRef}
-                        contentEditable={descFocused}
-                        onInput={(e) => setDescText(e.currentTarget.innerText)}
-                      >
-                        {section.content}
-                      </p>
-                    </div>
-                  );
+                  //design for the email content
+                  case "content":
+                    return (
+                      <div className="w-[80%] mx-auto" key={section.id}>
+                        <p
+                          className={`${initialContentClass} `}
+                          onClick={handleContentClick}
+                          ref={contentRef}
+                        >
+                          {section.content}
+                        </p>
+                      </div>
+                    );
 
-                // design for button in the template
-                case "title-button":
-                  return (
-                    <div
-                      key={section.id}
-                      className="flex justify-center items-center my-6"
-                    >
-                      <a
-                        href=""
-                        className={initialButtonClass}
-                        onClick={handleBtnClick}
-                        ref={buttonRef}
-                        contentEditable={buttonFocused}
-                        onInput={(e) =>
-                          setButtonText(e.currentTarget.innerText)
-                        }
-                      >
-                        {section.content}
-                      </a>
-                    </div>
-                  );
+                  //design for the footer
+                  case "footer":
+                    return (
+                      <div className="w-full" key={section.id}>
+                        <p
+                          className={`${initialFooterClass} `}
+                          onClick={handleFooterClick}
+                          ref={footerRef}
+                          contentEditable={footerFocused}
+                          onInput={(e) =>
+                            setFooterText(e.currentTarget.innerText)
+                          }
+                        >
+                          {section.content}
+                        </p>
+                      </div>
+                    );
 
-                //design for the email content
-                case "content":
-                  return (
-                    <div className="w-[80%] mx-auto" key={section.id}>
-                      <p
-                        className={`${initialContentClass} `}
-                        onClick={handleContentClick}
-                        ref={contentRef}
-                        contentEditable={contentFocused}
-                        onInput={(e) =>
-                          setContentText(e.currentTarget.innerText)
-                        }
-                      >
-                        {section.content}
-                      </p>
-                    </div>
-                  );
-
-                //design for the footer
-                case "footer":
-                  return (
-                    <div className="w-full" key={section.id}>
-                      <p
-                        className={`${initialFooterClass} `}
-                        onClick={handleFooterClick}
-                        ref={footerRef}
-                        contentEditable={footerFocused}
-                        onInput={(e) =>
-                          setFooterText(e.currentTarget.innerText)
-                        }
-                      >
-                        {section.content}
-                      </p>
-                    </div>
-                  );
-
-                default:
-                  return null;
-              }
-            })}
+                  default:
+                    return null;
+                }
+              })}
+            </div>
           </div>
         </div>
 
@@ -888,7 +919,10 @@ const EditTemplate = () => {
             )}
 
             <div className="mt-8 flex justify-center items-center">
-              <button className="text-white font-semibold bg-slate-800 rounded px-5 py-2">
+              <button
+                onClick={handleSaveandDownload}
+                className="text-white font-semibold bg-slate-800 rounded px-5 py-2"
+              >
                 Save & Download
               </button>
             </div>
