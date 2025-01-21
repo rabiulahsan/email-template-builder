@@ -196,7 +196,7 @@ const EditTemplate = () => {
     setDescFocused(false);
     setShowColorPicker(false);
     setShowBgColorPicker(false);
-    setContentText(contentRef.current.innerText); // Set the title content in the textarea
+    setFooterText(footerRef.current.innerText); // Set the title content in the textarea
   };
 
   //footer will be changed based on content editing
@@ -348,6 +348,41 @@ const EditTemplate = () => {
     URL.revokeObjectURL(url);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Check if the clicked element is outside all refs
+      if (
+        footerRef.current &&
+        !footerRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target) &&
+        contentRef.current &&
+        !contentRef.current.contains(e.target) &&
+        titleRef.current &&
+        !titleRef.current.contains(e.target) &&
+        descRef.current &&
+        !descRef.current.contains(e.target)
+      ) {
+        // Reset all states
+        setButtonFocused(false);
+        setTitleFocused(false);
+        setDescFocused(false);
+        setContentFocused(false);
+        setFooterFocused(false);
+        setShowColorPicker(false);
+        setShowBgColorPicker(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener("click", handleClickOutside);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once
+
   return (
     <div className=" bg-slate-200 p-[2%]">
       {/* top bar of the page  */}
@@ -408,15 +443,16 @@ const EditTemplate = () => {
                   //design for title field
                   case "title":
                     return (
-                      <div key={section.id} className="w-[70%] mx-auto">
+                      <div
+                        key={section.id}
+                        className={`w-[70%] mx-auto ${
+                          titleFocused ? "border border-slate-400" : ""
+                        }`}
+                      >
                         <h1
                           className={`${initialClass}`}
                           onClick={handleTitleClick}
                           ref={titleRef}
-                          contentEditable={titleFocused}
-                          onInput={(e) =>
-                            setTitleText(e.currentTarget.innerText)
-                          } // Update textarea in real-time
                         >
                           {section.content}
                         </h1>
@@ -426,7 +462,12 @@ const EditTemplate = () => {
                   //design for the title content
                   case "title-desc":
                     return (
-                      <div className="w-[70%] mx-auto" key={section.id}>
+                      <div
+                        className={`w-[70%] mx-auto ${
+                          descFocused ? "border border-slate-400" : ""
+                        }`}
+                        key={section.id}
+                      >
                         <p
                           className={`${initialDescClass} `}
                           onClick={handleDescClick}
@@ -442,17 +483,15 @@ const EditTemplate = () => {
                     return (
                       <div
                         key={section.id}
-                        className="flex justify-center items-center my-6"
+                        className={`flex justify-center items-center my-6 ${
+                          buttonFocused ? "border border-slate-400" : ""
+                        }`}
                       >
                         <a
-                          href=""
+                          // href=""
                           className={initialButtonClass}
                           onClick={handleBtnClick}
                           ref={buttonRef}
-                          contentEditable={buttonFocused}
-                          onInput={(e) =>
-                            setButtonText(e.currentTarget.innerText)
-                          }
                         >
                           {section.content}
                         </a>
@@ -462,7 +501,12 @@ const EditTemplate = () => {
                   //design for the email content
                   case "content":
                     return (
-                      <div className="w-[80%] mx-auto" key={section.id}>
+                      <div
+                        className={`w-[80] mx-auto px-4 py-4 ${
+                          contentFocused ? "border border-slate-400" : ""
+                        }`}
+                        key={section.id}
+                      >
                         <p
                           className={`${initialContentClass} `}
                           onClick={handleContentClick}
@@ -476,15 +520,16 @@ const EditTemplate = () => {
                   //design for the footer
                   case "footer":
                     return (
-                      <div className="w-full" key={section.id}>
+                      <div
+                        className={`w-full ${
+                          footerFocused ? "border border-orange-600" : ""
+                        }`}
+                        key={section.id}
+                      >
                         <p
                           className={`${initialFooterClass} `}
                           onClick={handleFooterClick}
                           ref={footerRef}
-                          contentEditable={footerFocused}
-                          onInput={(e) =>
-                            setFooterText(e.currentTarget.innerText)
-                          }
                         >
                           {section.content}
                         </p>
