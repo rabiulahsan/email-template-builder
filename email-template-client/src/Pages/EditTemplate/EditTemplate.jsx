@@ -3,7 +3,7 @@ import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploa
 import { useEffect, useRef, useState } from "react";
 import { SketchPicker } from "react-color";
 import { HashLoader } from "react-spinners";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
@@ -413,6 +413,7 @@ const EditTemplate = () => {
       return section;
     });
 
+    // Post the updated template to the API
     try {
       // Post the updated template to the API
       const response = await fetch(
@@ -432,27 +433,30 @@ const EditTemplate = () => {
 
       const result = await response.json();
       console.log("Template created successfully:", result);
-      if (result.result.insertedId) {
-        //download after it sends to database
-        // Delay the download to let the state update so that the border is removed (border is added on focus)
+
+      if (result.result?.insertedId) {
+        // Display success toast
+        showToast("Template saved successfully", "success");
+
+        // Trigger download
         setTimeout(() => {
           const contentToSave = templateRef.current.innerHTML;
 
           const fullHtml = `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Email Template</title>
-            <!-- Include Tailwind CSS CDN -->
-            <script src="https://cdn.tailwindcss.com"></script>
-          </head>
-          <body class="bg-gray-100">
-            ${contentToSave}
-          </body>
-          </html>
-        `;
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Email Template</title>
+              <!-- Include Tailwind CSS CDN -->
+              <script src="https://cdn.tailwindcss.com"></script>
+            </head>
+            <body class="bg-gray-100">
+              ${contentToSave}
+            </body>
+            </html>
+          `;
 
           const blob = new Blob([fullHtml], { type: "text/html" });
           const url = URL.createObjectURL(blob);
@@ -461,13 +465,16 @@ const EditTemplate = () => {
           a.download = "template.html";
           a.click();
           URL.revokeObjectURL(url);
-        }, 50); // Wait for the state to update (50ms delay)
+        }, 50);
 
-        //display the toast
-        showToast("Template saved and downloaded successfully", "success");
+        // Toast after download
+        showToast("Template downloaded successfully", "success");
+      } else {
+        showToast("Failed to save template", "error");
       }
     } catch (error) {
       console.log("Error in updating template:", error);
+      showToast("An error occurred while saving the template", "error");
     } finally {
       setSaveLoading(false); // Reset the save loading state
     }
@@ -1267,6 +1274,7 @@ const EditTemplate = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

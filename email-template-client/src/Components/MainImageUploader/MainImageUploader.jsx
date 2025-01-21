@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const MainImageUploader = ({ setImagePreview, image, setImage }) => {
   //handling the main image
@@ -50,6 +50,8 @@ const MainImageUploader = ({ setImagePreview, image, setImage }) => {
           </div>
         </div>
       )}
+
+      <ToastContainer />
     </div>
   );
 };
