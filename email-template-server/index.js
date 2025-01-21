@@ -82,14 +82,14 @@ const templates = [
         type: "content",
         content: "Additional information here.",
         classes:
-          "text-base text-center text-slate-600 mb-6 px-3 py-2 cursor-pointer",
+          "text-base text-center text-slate-600 px-3 py-2 cursor-pointer",
       },
       {
         id: 8,
         type: "footer",
         content: "Copyright © 2025 - All right reserved by Company Name",
         classes:
-          "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5 cursor-pointer",
+          "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5 mt-6 cursor-pointer",
       },
     ],
   },

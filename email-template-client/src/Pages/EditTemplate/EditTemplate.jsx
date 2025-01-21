@@ -469,7 +469,7 @@ const EditTemplate = () => {
         </div>
 
         {/*right side editing bar */}
-        <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4">
+        <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4 sticky top-5">
           <div className="">
             {/* text box  */}
             <p className="font-bold text-lg text-slate-700 mb-2">
