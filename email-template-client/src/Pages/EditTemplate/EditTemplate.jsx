@@ -3,7 +3,7 @@ import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploa
 import { useEffect, useRef, useState } from "react";
 import { SketchPicker } from "react-color";
 import { HashLoader } from "react-spinners";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
@@ -15,6 +15,7 @@ import {
 
 const EditTemplate = () => {
   const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
   const [logo, setLogo] = useState(null); // For the logo image
   const [image, setImage] = useState(null); // For the main image
   const [template, setTemplate] = useState([]); // For the selected template
@@ -340,6 +341,13 @@ const EditTemplate = () => {
     setShowColorPicker(false);
     setShowBgColorPicker(false);
 
+    if (!logo || !image) {
+      showToast("Please upload both images", "error");
+      setSaveLoading(false); // Reset the save loading state
+      return;
+    }
+    setSaveLoading(true); //set the save loading to true
+
     // URL for uploading images
     const uploadImageUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
 
@@ -424,13 +432,13 @@ const EditTemplate = () => {
 
       const result = await response.json();
       console.log("Template created successfully:", result);
+      if (result.result.insertedId) {
+        //download after it sends to database
+        // Delay the download to let the state update so that the border is removed (border is added on focus)
+        setTimeout(() => {
+          const contentToSave = templateRef.current.innerHTML;
 
-      //download after it sends to database
-      // Delay the download to let the state update so that the border is removed (border is added on focus)
-      setTimeout(() => {
-        const contentToSave = templateRef.current.innerHTML;
-
-        const fullHtml = `
+          const fullHtml = `
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -446,16 +454,22 @@ const EditTemplate = () => {
           </html>
         `;
 
-        const blob = new Blob([fullHtml], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "template.html";
-        a.click();
-        URL.revokeObjectURL(url);
-      }, 50); // Wait for the state to update (50ms delay)
+          const blob = new Blob([fullHtml], { type: "text/html" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "template.html";
+          a.click();
+          URL.revokeObjectURL(url);
+        }, 50); // Wait for the state to update (50ms delay)
+
+        //display the toast
+        showToast("Template saved and downloaded successfully", "success");
+      }
     } catch (error) {
       console.log("Error in updating template:", error);
+    } finally {
+      setSaveLoading(false); // Reset the save loading state
     }
   };
 
@@ -520,157 +534,166 @@ const EditTemplate = () => {
 
       <div className="flex items-start gap-x-5">
         {/* editing template preview  */}
-        <div className="  bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
-          {/* it is the main template  */}
-          <div className="flex justify-center items-center " ref={templateRef}>
+        {/* give loading state for saving  */}
+        {saveLoading ? (
+          <div className="flex justify-center items-center h-screen w-[70%]">
+            <HashLoader color="#4152bd" size={100} />
+          </div>
+        ) : (
+          <div className="  bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
+            {/* it is the main template  */}
             <div
+              className="flex justify-center items-center "
               ref={templateRef}
-              className="w-[70%] mx-auto bg-white pt-[4%] rounded-md"
             >
-              {template?.sections?.map((section) => {
-                switch (section.type) {
-                  //design for logo input
-                  case "logo":
-                    return (
-                      <div key={section.id} className="mb-5">
-                        <LogoImageUploader
-                          setPreview={setPreview}
-                          logo={logo}
-                          setLogo={setLogo}
-                        ></LogoImageUploader>
-                        {preview && (
-                          <img
-                            src={preview}
-                            alt="Logo Preview"
-                            className={section.classes}
-                          />
-                        )}
-                      </div>
-                    );
+              <div
+                ref={templateRef}
+                className="w-[70%] mx-auto bg-white pt-[4%] rounded-md"
+              >
+                {template?.sections?.map((section) => {
+                  switch (section.type) {
+                    //design for logo input
+                    case "logo":
+                      return (
+                        <div key={section.id} className="mb-5">
+                          <LogoImageUploader
+                            setPreview={setPreview}
+                            logo={logo}
+                            setLogo={setLogo}
+                          ></LogoImageUploader>
+                          {preview && (
+                            <img
+                              src={preview}
+                              alt="Logo Preview"
+                              className={section.classes}
+                            />
+                          )}
+                        </div>
+                      );
 
-                  // design for the images
-                  case "image":
-                    return (
-                      <div key={section.id} className="">
-                        <MainImageUploader
-                          setImagePreview={setImagePreview}
-                          setImage={setImage}
-                          image={image}
-                        ></MainImageUploader>
-                        {imagePreview && (
-                          <img
-                            src={imagePreview}
-                            alt="Image Preview"
-                            className={section.classes}
-                          />
-                        )}
-                      </div>
-                    );
+                    // design for the images
+                    case "image":
+                      return (
+                        <div key={section.id} className="">
+                          <MainImageUploader
+                            setImagePreview={setImagePreview}
+                            setImage={setImage}
+                            image={image}
+                          ></MainImageUploader>
+                          {imagePreview && (
+                            <img
+                              src={imagePreview}
+                              alt="Image Preview"
+                              className={section.classes}
+                            />
+                          )}
+                        </div>
+                      );
 
-                  //design for title field
-                  case "title":
-                    return (
-                      <div
-                        key={section.id}
-                        className={`w-[70%] mx-auto ${
-                          titleFocused ? "border border-slate-400" : ""
-                        }`}
-                      >
-                        <h1
-                          className={`${initialClass}`}
-                          onClick={handleTitleClick}
-                          ref={titleRef}
+                    //design for title field
+                    case "title":
+                      return (
+                        <div
+                          key={section.id}
+                          className={`w-[70%] mx-auto ${
+                            titleFocused ? "border border-slate-400" : ""
+                          }`}
                         >
-                          {section.content}
-                        </h1>
-                      </div>
-                    );
+                          <h1
+                            className={`${initialClass}`}
+                            onClick={handleTitleClick}
+                            ref={titleRef}
+                          >
+                            {section.content}
+                          </h1>
+                        </div>
+                      );
 
-                  //design for the title content
-                  case "title-desc":
-                    return (
-                      <div
-                        className={`w-[70%] mx-auto ${
-                          descFocused ? "border border-slate-400" : ""
-                        }`}
-                        key={section.id}
-                      >
-                        <p
-                          className={`${initialDescClass} `}
-                          onClick={handleDescClick}
-                          ref={descRef}
+                    //design for the title content
+                    case "title-desc":
+                      return (
+                        <div
+                          className={`w-[70%] mx-auto ${
+                            descFocused ? "border border-slate-400" : ""
+                          }`}
+                          key={section.id}
                         >
-                          {section.content}
-                        </p>
-                      </div>
-                    );
+                          <p
+                            className={`${initialDescClass} `}
+                            onClick={handleDescClick}
+                            ref={descRef}
+                          >
+                            {section.content}
+                          </p>
+                        </div>
+                      );
 
-                  // design for button in the template
-                  case "title-button":
-                    return (
-                      <div
-                        key={section.id}
-                        className={`flex justify-center items-center my-6 ${
-                          buttonFocused ? "border border-slate-400" : ""
-                        }`}
-                      >
-                        <a
-                          // href=""
-                          className={initialButtonClass}
-                          onClick={handleBtnClick}
-                          ref={buttonRef}
+                    // design for button in the template
+                    case "title-button":
+                      return (
+                        <div
+                          key={section.id}
+                          className={`flex justify-center items-center my-6 ${
+                            buttonFocused ? "border border-slate-400" : ""
+                          }`}
                         >
-                          {section.content}
-                        </a>
-                      </div>
-                    );
+                          <a
+                            // href=""
+                            className={initialButtonClass}
+                            onClick={handleBtnClick}
+                            ref={buttonRef}
+                          >
+                            {section.content}
+                          </a>
+                        </div>
+                      );
 
-                  //design for the email content
-                  case "content":
-                    return (
-                      <div
-                        className={`w-[80] mx-auto px-4 py-4 ${
-                          contentFocused ? "border border-slate-400" : ""
-                        }`}
-                        key={section.id}
-                      >
-                        <p
-                          className={`${initialContentClass} `}
-                          onClick={handleContentClick}
-                          ref={contentRef}
+                    //design for the email content
+                    case "content":
+                      return (
+                        <div
+                          className={`w-[80] mx-auto px-4 py-4 ${
+                            contentFocused ? "border border-slate-400" : ""
+                          }`}
+                          key={section.id}
                         >
-                          {section.content}
-                        </p>
-                      </div>
-                    );
+                          <p
+                            className={`${initialContentClass} `}
+                            onClick={handleContentClick}
+                            ref={contentRef}
+                          >
+                            {section.content}
+                          </p>
+                        </div>
+                      );
 
-                  //design for the footer
-                  case "footer":
-                    return (
-                      <div
-                        className={`w-full ${
-                          footerFocused ? "border border-orange-600" : ""
-                        }`}
-                        key={section.id}
-                      >
-                        <p
-                          className={`${initialFooterClass} `}
-                          onClick={handleFooterClick}
-                          ref={footerRef}
+                    //design for the footer
+                    case "footer":
+                      return (
+                        <div
+                          className={`w-full ${
+                            footerFocused ? "border border-orange-600" : ""
+                          }`}
+                          key={section.id}
                         >
-                          {section.content}
-                        </p>
-                      </div>
-                    );
+                          <p
+                            className={`${initialFooterClass} `}
+                            onClick={handleFooterClick}
+                            ref={footerRef}
+                          >
+                            {section.content}
+                          </p>
+                        </div>
+                      );
 
-                  default:
-                    return null;
-                }
-              })}
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
             </div>
           </div>
-        </div>
-
+        )}
         {/*right side editing bar */}
         <div
           className="bg-white w-[30%] rounded-md border border-slate-400 p-4 sticky top-5"
@@ -1251,18 +1274,18 @@ const EditTemplate = () => {
 export default EditTemplate;
 
 //for displaying the toast
-// const showToast = (message, type = "info", position = "top-right") => {
-//   toast(message, {
-//     position,
-//     type,
-//     autoClose: 5000, // Auto close after 5 seconds
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: true,
-//     draggable: true,
-//     progress: undefined,
-//   });
-// };
+const showToast = (message, type = "info", position = "top-right") => {
+  toast(message, {
+    position,
+    type,
+    autoClose: 5000, // Auto close after 5 seconds
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 //color samples
 const colorSamples = [
