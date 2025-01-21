@@ -30,6 +30,26 @@ app.get("/api/get/templates", async (req, res) => {
   }
 });
 
+//api for getting a single template
+app.get("/api/get/templates/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const template = await templatesCollection.findOne({
+      _id: new ObjectId(String(id)),
+    });
+    if (template) {
+      res.json(template);
+    } else {
+      res.status(404).json({ message: "Template not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching template by ID:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching the template" });
+  }
+});
+
 //test
 app.get("/", (req, res) => {
   res.send("Server is running....");
