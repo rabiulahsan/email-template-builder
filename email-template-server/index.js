@@ -53,9 +53,14 @@ app.get("/api/get/templates/:id", async (req, res) => {
 //api for creating a new template by layout
 app.post("/api/create/template", async (req, res) => {
   const newTemplate = req.body;
-  console.log(newTemplate);
+
+  // Clone the newTemplate object and remove _id if it exists
+  const { _id, ...templateWithoutId } = req.body;
+
   try {
-    const result = await createdTemplatesCollection.insertOne(newTemplate);
+    const result = await createdTemplatesCollection.insertOne(
+      templateWithoutId
+    );
     if (result.insertedId) {
       res.json({ message: "Template created successfully", result: result });
     } else {

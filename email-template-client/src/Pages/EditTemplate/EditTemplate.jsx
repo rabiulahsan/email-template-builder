@@ -48,6 +48,7 @@ const EditTemplate = () => {
   const [buttonFocused, setButtonFocused] = useState(false);
   const [buttonText, setButtonText] = useState(""); // Content of the title
   const buttonRef = useRef(null);
+  const [buttonUrl, setButtonUrl] = useState("");
 
   //for footer
   const [footerFocused, setFooterFocused] = useState(false);
@@ -85,18 +86,23 @@ const EditTemplate = () => {
               switch (section.type) {
                 case "title":
                   setInitialClass(section.classes);
+                  setTitleText(section.content);
                   break;
                 case "title-desc":
                   setInitialDescClass(section.classes);
+                  setDescText(section.content);
                   break;
                 case "content":
                   setInitialContentClass(section.classes);
+                  setContentText(section.content);
                   break;
                 case "title-button":
                   setInitialButtonClass(section.classes);
+                  setButtonText(section.content);
                   break;
                 case "footer":
                   setInitialFooterClass(section.classes);
+                  setFooterText(section.content);
                   break;
                 default:
                   console.warn(`Unknown section type: ${section.type}`);
@@ -111,7 +117,7 @@ const EditTemplate = () => {
       .catch((err) => console.error("Error fetching template:", err));
   }, [templateId]);
 
-  console.log(template);
+  // console.log(template);
 
   //handle title content
   const handleTitleClick = () => {
@@ -323,8 +329,6 @@ const EditTemplate = () => {
     }
   };
 
-  // console.log(initialClass);
-
   //function for handle downloading
   const handleSaveandDownload = async () => {
     // Reset all states immediately
@@ -336,8 +340,10 @@ const EditTemplate = () => {
     setShowColorPicker(false);
     setShowBgColorPicker(false);
 
+    // URL for uploading images
     const uploadImageUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
 
+    //function to upload image to imgbb
     const uploadToImgBB = async (image) => {
       const formData = new FormData();
       formData.append("image", image);
@@ -351,47 +357,106 @@ const EditTemplate = () => {
         throw new Error("Failed to upload image");
       }
 
+      //returning the url of the uploaded image
       const data = await response.json();
       return data.data.display_url; // URL of the uploaded image
     };
 
-    // Upload both images
+    // Upload both images and taking the url
     const [logoUrl, mainImageUrl] = await Promise.all([
       uploadToImgBB(logo),
       uploadToImgBB(image),
     ]);
 
-    console.log("Logo URL:", logoUrl);
-    console.log("Main Image URL:", mainImageUrl);
+    // Update the template sections
+    const updatedTemplate = { ...template }; // Copy the original template object
+    updatedTemplate.sections = updatedTemplate.sections.map((section) => {
+      switch (section.type) {
+        case "logo":
+          section.url = logoUrl;
+          break;
+        case "image":
+          section.url = mainImageUrl;
+          break;
+        case "title-button":
+          section.url = buttonUrl;
+          section.classes = initialButtonClass;
+          section.content = buttonText;
+          break;
+        case "title":
+          section.classes = initialClass;
+          section.content = titleText;
+          break;
+        case "title-desc":
+          section.classes = initialDescClass;
+          section.content = descText;
+          break;
+        case "content":
+          section.classes = initialContentClass;
+          section.content = contentText;
+          break;
+        case "footer":
+          section.classes = initialFooterClass;
+          section.content = footerText;
+          break;
+        default:
+          console.warn(`Unknown section type: ${section.type}`);
+      }
+      return section;
+    });
 
-    // Delay the download to let the state update so that the border is removed (border is added on focus)
-    // setTimeout(() => {
-    //   const contentToSave = templateRef.current.innerHTML;
+    try {
+      // Post the updated template to the API
+      const response = await fetch(
+        "http://localhost:5000/api/create/template",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTemplate),
+        }
+      );
 
-    //   const fullHtml = `
-    //     <!DOCTYPE html>
-    //     <html lang="en">
-    //     <head>
-    //       <meta charset="UTF-8">
-    //       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    //       <title>Email Template</title>
-    //       <!-- Include Tailwind CSS CDN -->
-    //       <script src="https://cdn.tailwindcss.com"></script>
-    //     </head>
-    //     <body class="bg-gray-100">
-    //       ${contentToSave}
-    //     </body>
-    //     </html>
-    //   `;
+      if (!response.ok) {
+        throw new Error("Failed to post the template");
+      }
 
-    //   const blob = new Blob([fullHtml], { type: "text/html" });
-    //   const url = URL.createObjectURL(blob);
-    //   const a = document.createElement("a");
-    //   a.href = url;
-    //   a.download = "template.html";
-    //   a.click();
-    //   URL.revokeObjectURL(url);
-    // }, 50); // Wait for the state to update (50ms delay)
+      const result = await response.json();
+      console.log("Template created successfully:", result);
+
+      //download after it sends to database
+      // Delay the download to let the state update so that the border is removed (border is added on focus)
+      setTimeout(() => {
+        const contentToSave = templateRef.current.innerHTML;
+
+        const fullHtml = `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Template</title>
+            <!-- Include Tailwind CSS CDN -->
+            <script src="https://cdn.tailwindcss.com"></script>
+          </head>
+          <body class="bg-gray-100">
+            ${contentToSave}
+          </body>
+          </html>
+        `;
+
+        const blob = new Blob([fullHtml], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "template.html";
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 50); // Wait for the state to update (50ms delay)
+    } catch (error) {
+      console.log("Error in updating template:", error);
+    }
   };
 
   //function for defocusing all after editing
