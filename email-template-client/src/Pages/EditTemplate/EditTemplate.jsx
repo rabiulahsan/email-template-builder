@@ -17,6 +17,7 @@ const EditTemplate = () => {
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
   const templateRef = useRef(null); // Reference to the template div
+  const editorRef = useRef(null); // Reference to the editor div
 
   //for color picker
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -321,33 +322,47 @@ const EditTemplate = () => {
 
   //function for handle downloading
   const handleSaveandDownload = () => {
-    const contentToSave = templateRef.current.innerHTML;
+    // Reset all states immediately
+    setButtonFocused(false);
+    setTitleFocused(false); // Ensure title is unfocused
+    setDescFocused(false);
+    setContentFocused(false);
+    setFooterFocused(false);
+    setShowColorPicker(false);
+    setShowBgColorPicker(false);
 
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Email Template</title>
-        <!-- Include Tailwind CSS CDN -->
-        <script src="https://cdn.tailwindcss.com"></script>
-      </head>
-      <body class="bg-gray-100">
-        ${contentToSave}
-      </body>
-      </html>
-    `;
+    // Delay the download to let the state update so that the border is removed (border is added on focus)
+    setTimeout(() => {
+      const contentToSave = templateRef.current.innerHTML;
 
-    const blob = new Blob([fullHtml], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "template.html";
-    a.click();
-    URL.revokeObjectURL(url);
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Template</title>
+          <!-- Include Tailwind CSS CDN -->
+          <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="bg-gray-100">
+          ${contentToSave}
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([fullHtml], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "template.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }, 50); // Wait for the state to update (50ms delay)
   };
 
+  //function for defocusing all after editing
+  //handle outside clicking
   useEffect(() => {
     const handleClickOutside = (e) => {
       // Check if the clicked element is outside all refs
@@ -361,7 +376,9 @@ const EditTemplate = () => {
         titleRef.current &&
         !titleRef.current.contains(e.target) &&
         descRef.current &&
-        !descRef.current.contains(e.target)
+        !descRef.current.contains(e.target) &&
+        editorRef.current &&
+        !editorRef.current.contains(e.target) // Allow clicks inside editorRef
       ) {
         // Reset all states
         setButtonFocused(false);
@@ -545,7 +562,10 @@ const EditTemplate = () => {
         </div>
 
         {/*right side editing bar */}
-        <div className="bg-white w-[30%] rounded-md border border-slate-400 p-4 sticky top-5">
+        <div
+          className="bg-white w-[30%] rounded-md border border-slate-400 p-4 sticky top-5"
+          ref={editorRef}
+        >
           <div className="">
             {/* text box  */}
             <p className="font-bold text-lg text-slate-700 mb-2">
