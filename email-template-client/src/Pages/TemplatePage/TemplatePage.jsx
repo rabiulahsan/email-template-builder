@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 const TemplatePage = () => {
+  //using tanstack/react-query to fetch data
   const { data: templates } = useQuery({
     querykey: "templates",
     queryFn: async () => {

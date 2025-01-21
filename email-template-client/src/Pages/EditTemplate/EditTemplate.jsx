@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploader";
 import { useEffect, useRef, useState } from "react";
 import { SketchPicker } from "react-color";
+import { HashLoader } from "react-spinners";
 // import { toast } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -13,6 +14,7 @@ import {
 } from "react-icons/md";
 
 const EditTemplate = () => {
+  const [loading, setLoading] = useState(true);
   const [template, setTemplate] = useState([]); // For the selected template
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
@@ -74,6 +76,7 @@ const EditTemplate = () => {
         if (res.ok) {
           res.json().then((data) => {
             setTemplate(data);
+            setLoading(false);
 
             // Iterate through the sections and set classes dynamically
             data.sections.forEach((section) => {
@@ -400,6 +403,14 @@ const EditTemplate = () => {
     };
   }, []); // Empty dependency array ensures the effect runs only once
 
+  //loading design is here
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <HashLoader color="#4152bd" size={100} />
+      </div>
+    );
+  }
   return (
     <div className=" bg-slate-200 p-[2%]">
       {/* top bar of the page  */}
