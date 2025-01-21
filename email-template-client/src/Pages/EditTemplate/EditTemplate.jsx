@@ -147,40 +147,18 @@ const EditTemplate = () => {
   // Handle alignment click (single-choice)
   const handleAlignmentClick = (alignClass) => {
     if (titleFocused) {
-      setInitialClass((prev) =>
-        updateClass(prev, alignClass, [
-          "text-center",
-          "text-justify",
-          "text-left",
-          "text-right",
-        ])
-      );
+      setInitialClass((prev) => updateClass(prev, alignClass, alignOptions));
     } else if (descFocused) {
       setInitialDescClass((prev) =>
-        updateClass(prev, alignClass, [
-          "text-center",
-          "text-justify",
-          "text-left",
-          "text-right",
-        ])
+        updateClass(prev, alignClass, alignOptions)
       );
     } else if (contentFocused) {
       setInitialContentClass((prev) =>
-        updateClass(prev, alignClass, [
-          "text-center",
-          "text-justify",
-          "text-left",
-          "text-right",
-        ])
+        updateClass(prev, alignClass, alignOptions)
       );
     } else if (footerFocused) {
       setInitialFooterClass((prev) =>
-        updateClass(prev, alignClass, [
-          "text-center",
-          "text-justify",
-          "text-left",
-          "text-right",
-        ])
+        updateClass(prev, alignClass, alignOptions)
       );
     }
   };
@@ -199,54 +177,19 @@ const EditTemplate = () => {
   };
 
   // Handle size click (single-choice)
+  // here size options are declared below
   const handleSizeClick = (sizeClass) => {
     if (titleFocused) {
-      setInitialClass((prev) =>
-        updateClass(prev, sizeClass, [
-          "text-sm",
-          "text-base",
-          "text-lg",
-          "text-xl",
-          "text-2xl",
-          "text-3xl",
-          "text-4xl",
-        ])
-      );
+      setInitialClass((prev) => updateClass(prev, sizeClass, sizeOptions));
     } else if (descFocused) {
-      setInitialDescClass((prev) =>
-        updateClass(prev, sizeClass, [
-          "text-sm",
-          "text-base",
-          "text-lg",
-          "text-xl",
-          "text-2xl",
-          "text-3xl",
-          "text-4xl",
-        ])
-      );
+      setInitialDescClass((prev) => updateClass(prev, sizeClass, sizeOptions));
     } else if (contentFocused) {
       setInitialContentClass((prev) =>
-        updateClass(prev, sizeClass, [
-          "text-sm",
-          "text-base",
-          "text-lg",
-          "text-xl",
-          "text-2xl",
-          "text-3xl",
-          "text-4xl",
-        ])
+        updateClass(prev, sizeClass, sizeOptions)
       );
     } else if (footerFocused) {
       setInitialFooterClass((prev) =>
-        updateClass(prev, sizeClass, [
-          "text-sm",
-          "text-base",
-          "text-lg",
-          "text-xl",
-          "text-2xl",
-          "text-3xl",
-          "text-4xl",
-        ])
+        updateClass(prev, sizeClass, sizeOptions)
       );
     }
   };
@@ -965,3 +908,15 @@ const colorSamples = [
   { id: 6, color: "#22C55E" }, // green-500
   { id: 7, color: "#F43F5E" }, // rose-500
 ];
+
+const sizeOptions = [
+  "text-sm",
+  "text-base",
+  "text-lg",
+  "text-xl",
+  "text-2xl",
+  "text-3xl",
+  "text-4xl",
+];
+
+const alignOptions = ["text-center", "text-justify", "text-left", "text-right"];
