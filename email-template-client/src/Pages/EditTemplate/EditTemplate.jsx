@@ -692,7 +692,7 @@ const EditTemplate = () => {
             </div>
 
             {/* alignment button  */}
-            {!buttonFocused && (
+            {!buttonFocused && !footerFocused && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
                   Alignment
@@ -708,6 +708,8 @@ const EditTemplate = () => {
                         ? initialDescClass.includes("text-left")
                           ? "bg-slate-100"
                           : ""
+                        : initialContentClass.includes("text-left")
+                        ? "bg-slate-100"
                         : ""
                     }`}
                     title="Left"
@@ -725,6 +727,8 @@ const EditTemplate = () => {
                         ? initialDescClass.includes("text-right")
                           ? "bg-slate-100"
                           : ""
+                        : initialContentClass.includes("text-right")
+                        ? "bg-slate-100"
                         : ""
                     }`}
                     title="Right"
@@ -742,6 +746,8 @@ const EditTemplate = () => {
                         ? initialDescClass.includes("text-center")
                           ? "bg-slate-100"
                           : ""
+                        : initialContentClass.includes("text-center")
+                        ? "bg-slate-100"
                         : ""
                     }`}
                     title="Center"
@@ -759,6 +765,8 @@ const EditTemplate = () => {
                         ? initialDescClass.includes("text-justify")
                           ? "bg-slate-100"
                           : ""
+                        : initialContentClass.includes("text-justify")
+                        ? "bg-slate-100"
                         : ""
                     }`}
                     title="Justify"
