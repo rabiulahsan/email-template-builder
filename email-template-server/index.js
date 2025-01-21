@@ -17,7 +17,7 @@ run();
 const templatesCollection = db.collection("templates");
 const createdTemplatesCollection = db.collection("created-templates");
 
-//api for getting all templates
+//api for getting all templates layout
 app.get("/api/get/templates", async (req, res) => {
   try {
     const result = await templatesCollection.find().toArray();
@@ -30,7 +30,7 @@ app.get("/api/get/templates", async (req, res) => {
   }
 });
 
-//api for getting a single template
+//api for getting a single template layout by ID
 app.get("/api/get/templates/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -47,6 +47,26 @@ app.get("/api/get/templates/:id", async (req, res) => {
     res
       .status(500)
       .json({ message: "An error occurred while fetching the template" });
+  }
+});
+
+//api for creating a new template by layout
+app.post("/api/create/template", async (req, res) => {
+  const newTemplate = req.body;
+  console.log(newTemplate);
+  try {
+    const result = await createdTemplatesCollection.insertOne(newTemplate);
+    if (result.insertedId) {
+      res.json({ message: "Template created successfully", result: result });
+    } else {
+      res
+        .status(500)
+        .json({ message: "An error occurred while creating the template" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occurred while creating the template 2" });
   }
 });
 
