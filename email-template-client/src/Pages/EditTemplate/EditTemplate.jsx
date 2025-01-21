@@ -594,7 +594,13 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("font-bold")
                         ? "bg-slate-100"
+                        : initialButtonClass.includes("font-bold")
+                        ? "bg-slate-100"
                         : ""
+                      : initialContentClass.includes("font-bold")
+                      ? "bg-slate-100"
+                      : initialFooterClass.includes("font-bold")
+                      ? "bg-slate-100"
                       : ""
                   }`}
                   title="Bold"
@@ -611,7 +617,13 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("italic")
                         ? "bg-slate-100"
+                        : initialButtonClass.includes("italic")
+                        ? "bg-slate-100"
                         : ""
+                      : initialContentClass.includes("italic")
+                      ? "bg-slate-100"
+                      : initialFooterClass.includes("italic")
+                      ? "bg-slate-100"
                       : ""
                   }`}
                   title="Italic"
@@ -628,7 +640,13 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("underline")
                         ? "bg-slate-100"
+                        : initialButtonClass.includes("underline")
+                        ? "bg-slate-100"
                         : ""
+                      : initialContentClass.includes("underline")
+                      ? "bg-slate-100"
+                      : initialFooterClass.includes("underline")
+                      ? "bg-slate-100"
                       : ""
                   }`}
                   title="Underline"
@@ -645,7 +663,13 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("line-through")
                         ? "bg-slate-100"
+                        : initialButtonClass.includes("line-through")
+                        ? "bg-slate-100"
                         : ""
+                      : initialContentClass.includes("line-through")
+                      ? "bg-slate-100"
+                      : initialFooterClass.includes("line-through")
+                      ? "bg-slate-100"
                       : ""
                   }`}
                   title="Strikethrough"
