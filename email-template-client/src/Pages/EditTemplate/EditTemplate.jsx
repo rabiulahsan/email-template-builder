@@ -21,7 +21,6 @@ const EditTemplate = () => {
   const [color, setColor] = useState("#000000");
 
   //for title
-
   const [titleFocused, setTitleFocused] = useState(false);
   const [titleText, setTitleText] = useState(""); // Content of the title
   const titleRef = useRef(null);
@@ -30,6 +29,16 @@ const EditTemplate = () => {
   const [descFocused, setDescFocused] = useState(false);
   const [descText, setDescText] = useState(""); // Content of the title
   const descRef = useRef(null);
+
+  //for content
+  const [contentFocused, setContentFocused] = useState(false);
+  const [contentText, setContentText] = useState(""); // Content of the title
+  const contentRef = useRef(null);
+
+  //for footer
+  const [footerFocused, setFooterFocused] = useState(false);
+  const [footerText, setFooterText] = useState(""); // Content of the title
+  const footerRef = useRef(null);
 
   const templateId = useParams().id;
 
@@ -42,6 +51,8 @@ const EditTemplate = () => {
     setTitleFocused(true); // Enable editing
     setDescFocused(false);
     setShowColorPicker(false);
+    setContentFocused(true);
+    setFooterFocused(false);
     setTitleText(titleRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -58,6 +69,8 @@ const EditTemplate = () => {
     setDescFocused(true); // Enable editing
     setTitleFocused(false);
     setShowColorPicker(false);
+    setContentFocused(true);
+    setFooterFocused(false);
     setDescText(descRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -69,6 +82,42 @@ const EditTemplate = () => {
     }
   };
 
+  //handle content
+  const handleContentClick = () => {
+    setContentFocused(true);
+    setTitleFocused(false);
+    setDescFocused(false);
+    setShowColorPicker(false);
+    setFooterFocused(false);
+    setContentText(contentRef.current.innerText); // Set the title content in the textarea
+  };
+
+  //text will be changed based on content editing
+  const handleContentChange = (e) => {
+    setContentText(e.target.value); // Update the state with the edited content
+    if (contentRef.current) {
+      contentRef.current.innerText = e.target.value; // Update the preview in real-time
+    }
+  };
+
+  //handle footer content
+  const handleFooterClick = () => {
+    setFooterFocused(true);
+    setContentFocused(false);
+    setTitleFocused(false);
+    setDescFocused(false);
+    setShowColorPicker(false);
+    setContentText(contentRef.current.innerText); // Set the title content in the textarea
+  };
+
+  //footer will be changed based on content editing
+  const handleFooterChange = (e) => {
+    setFooterText(e.target.value); // Update the state with the edited content
+    if (footerRef.current) {
+      footerRef.current.innerText = e.target.value; // Update the preview in real-time
+    }
+  };
+
   //state for initial class
   const [initialClass, setInitialClass] = useState(
     "text-4xl font-bold text-center mt-4 px-3 py-2 cursor-pointer"
@@ -76,6 +125,16 @@ const EditTemplate = () => {
 
   //state for description initial class
   const [initialDescClass, setInitialDescClass] = useState(
+    "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
+  );
+
+  //state for description initial class
+  const [initialContentClass, setInitialContentClass] = useState(
+    "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
+  );
+
+  //state for footer initial class
+  const [initialFooterClass, setInitialFooterClass] = useState(
     "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
   );
 
@@ -272,19 +331,42 @@ const EditTemplate = () => {
                     </div>
                   );
 
-                //   case "footer":
-                //     return (
-                //       <footer key={section.id} className={section.classes}>
-                //         <input
-                //           type="text"
-                //           value={section.content}
-                //           placeholder="Footer Text"
-                //           //   onChange={(e) =>
-                //           //     updateSection(section.id, { content: e.target.value })
-                //           //   }
-                //         />
-                //       </footer>
-                //     );
+                //design for the email content
+                case "content":
+                  return (
+                    <div className="w-[70%] mx-auto" key={section.id}>
+                      <p
+                        className={`${initialContentClass} `}
+                        onClick={handleContentClick}
+                        ref={contentRef}
+                        contentEditable={contentFocused}
+                        onInput={(e) =>
+                          setContentText(e.currentTarget.innerText)
+                        }
+                      >
+                        {section.content}
+                      </p>
+                    </div>
+                  );
+
+                //design for the footer
+                case "footer":
+                  return (
+                    <div className="w-[70%] mx-auto" key={section.id}>
+                      <p
+                        className={`${initialFooterClass} `}
+                        onClick={handleFooterClick}
+                        ref={footerRef}
+                        contentEditable={footerFocused}
+                        onInput={(e) =>
+                          setFooterText(e.currentTarget.innerText)
+                        }
+                      >
+                        {section.content}
+                      </p>
+                    </div>
+                  );
+
                 //   case "social":
                 //     return (
                 //       <div key={section.id} className={section.classes}>
