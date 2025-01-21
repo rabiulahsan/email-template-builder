@@ -56,6 +56,7 @@ const EditTemplate = () => {
   //handle title content
   const handleTitleClick = () => {
     setTitleFocused(true); // Enable editing
+    setButtonFocused(false);
     setDescFocused(false);
     setContentFocused(false);
     setFooterFocused(false);
@@ -76,6 +77,7 @@ const EditTemplate = () => {
   const handleDescClick = () => {
     setDescFocused(true); // Enable editing
     setTitleFocused(false);
+    setButtonFocused(false);
     setContentFocused(false);
     setFooterFocused(false);
     setShowColorPicker(false);
@@ -101,7 +103,6 @@ const EditTemplate = () => {
     setShowColorPicker(false);
     setShowBgColorPicker(false);
     setButtonText(buttonRef.current.innerText); // Set the title content in the textarea
-    console.log(buttonText);
   };
 
   // button text will be changed based on input
@@ -116,6 +117,7 @@ const EditTemplate = () => {
   const handleContentClick = () => {
     setContentFocused(true);
     setTitleFocused(false);
+    setButtonFocused(false);
     setDescFocused(false);
     setFooterFocused(false);
     setShowColorPicker(false);
@@ -136,6 +138,7 @@ const EditTemplate = () => {
     setFooterFocused(true);
     setContentFocused(false);
     setTitleFocused(false);
+    setButtonFocused(false);
     setDescFocused(false);
     setShowColorPicker(false);
     setShowBgColorPicker(false);
@@ -189,6 +192,10 @@ const EditTemplate = () => {
       );
     } else if (footerFocused) {
       setInitialFooterClass((prev) =>
+        updateClass(prev, alignClass, alignOptions)
+      );
+    } else if (buttonFocused) {
+      setInitialButtonClass((prev) =>
         updateClass(prev, alignClass, alignOptions)
       );
     }
@@ -561,81 +568,83 @@ const EditTemplate = () => {
             </div>
 
             {/* alignment button  */}
-            <div className="mt-5">
-              <p className="text-slate-600 text-sm font-semibold mb-2">
-                Alignment
-              </p>
-              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
-                <p
-                  className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    titleFocused
-                      ? initialClass.includes("text-left")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-left")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Left"
-                  onClick={() => handleAlignmentClick("text-left")}
-                >
-                  <MdFormatAlignLeft size={20} />
+            {!buttonFocused && (
+              <div className="mt-5">
+                <p className="text-slate-600 text-sm font-semibold mb-2">
+                  Alignment
                 </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    titleFocused
-                      ? initialClass.includes("text-right")
-                        ? "bg-slate-100"
+                <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
+                  <p
+                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
+                      titleFocused
+                        ? initialClass.includes("text-left")
+                          ? "bg-slate-100"
+                          : ""
+                        : descFocused
+                        ? initialDescClass.includes("text-left")
+                          ? "bg-slate-100"
+                          : ""
                         : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-right")
-                        ? "bg-slate-100"
+                    }`}
+                    title="Left"
+                    onClick={() => handleAlignmentClick("text-left")}
+                  >
+                    <MdFormatAlignLeft size={20} />
+                  </p>
+                  <p
+                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
+                      titleFocused
+                        ? initialClass.includes("text-right")
+                          ? "bg-slate-100"
+                          : ""
+                        : descFocused
+                        ? initialDescClass.includes("text-right")
+                          ? "bg-slate-100"
+                          : ""
                         : ""
-                      : ""
-                  }`}
-                  title="Right"
-                  onClick={() => handleAlignmentClick("text-right")}
-                >
-                  <MdFormatAlignRight size={20} />
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                    titleFocused
-                      ? initialClass.includes("text-center")
-                        ? "bg-slate-100"
+                    }`}
+                    title="Right"
+                    onClick={() => handleAlignmentClick("text-right")}
+                  >
+                    <MdFormatAlignRight size={20} />
+                  </p>
+                  <p
+                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
+                      titleFocused
+                        ? initialClass.includes("text-center")
+                          ? "bg-slate-100"
+                          : ""
+                        : descFocused
+                        ? initialDescClass.includes("text-center")
+                          ? "bg-slate-100"
+                          : ""
                         : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-center")
-                        ? "bg-slate-100"
+                    }`}
+                    title="Center"
+                    onClick={() => handleAlignmentClick("text-center")}
+                  >
+                    <MdFormatAlignCenter size={20} />
+                  </p>
+                  <p
+                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 cursor-pointer flex justify-center items-center ${
+                      titleFocused
+                        ? initialClass.includes("text-justify")
+                          ? "bg-slate-100"
+                          : ""
+                        : descFocused
+                        ? initialDescClass.includes("text-justify")
+                          ? "bg-slate-100"
+                          : ""
                         : ""
-                      : ""
-                  }`}
-                  title="Center"
-                  onClick={() => handleAlignmentClick("text-center")}
-                >
-                  <MdFormatAlignCenter size={20} />
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 cursor-pointer flex justify-center items-center ${
-                    titleFocused
-                      ? initialClass.includes("text-justify")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-justify")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Justify"
-                  onClick={() => handleAlignmentClick("text-justify")}
-                >
-                  <MdFormatAlignJustify size={20} />
-                </p>
+                    }`}
+                    title="Justify"
+                    onClick={() => handleAlignmentClick("text-justify")}
+                  >
+                    <MdFormatAlignJustify size={20} />
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Font size button  */}
             <div className="mt-5">
