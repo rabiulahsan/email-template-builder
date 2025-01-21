@@ -15,6 +15,8 @@ import {
 
 const EditTemplate = () => {
   const [loading, setLoading] = useState(true);
+  const [logo, setLogo] = useState(null); // For the logo image
+  const [image, setImage] = useState(null); // For the main image
   const [template, setTemplate] = useState([]); // For the selected template
   const [preview, setPreview] = useState(null); // For logo preview
   const [imagePreview, setImagePreview] = useState(null); // For image preview
@@ -324,7 +326,7 @@ const EditTemplate = () => {
   // console.log(initialClass);
 
   //function for handle downloading
-  const handleSaveandDownload = () => {
+  const handleSaveandDownload = async () => {
     // Reset all states immediately
     setButtonFocused(false);
     setTitleFocused(false); // Ensure title is unfocused
@@ -334,34 +336,62 @@ const EditTemplate = () => {
     setShowColorPicker(false);
     setShowBgColorPicker(false);
 
+    const uploadImageUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
+
+    const uploadToImgBB = async (image) => {
+      const formData = new FormData();
+      formData.append("image", image);
+
+      const response = await fetch(uploadImageUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      return data.data.display_url; // URL of the uploaded image
+    };
+
+    // Upload both images
+    const [logoUrl, mainImageUrl] = await Promise.all([
+      uploadToImgBB(logo),
+      uploadToImgBB(image),
+    ]);
+
+    console.log("Logo URL:", logoUrl);
+    console.log("Main Image URL:", mainImageUrl);
+
     // Delay the download to let the state update so that the border is removed (border is added on focus)
-    setTimeout(() => {
-      const contentToSave = templateRef.current.innerHTML;
+    // setTimeout(() => {
+    //   const contentToSave = templateRef.current.innerHTML;
 
-      const fullHtml = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Email Template</title>
-          <!-- Include Tailwind CSS CDN -->
-          <script src="https://cdn.tailwindcss.com"></script>
-        </head>
-        <body class="bg-gray-100">
-          ${contentToSave}
-        </body>
-        </html>
-      `;
+    //   const fullHtml = `
+    //     <!DOCTYPE html>
+    //     <html lang="en">
+    //     <head>
+    //       <meta charset="UTF-8">
+    //       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //       <title>Email Template</title>
+    //       <!-- Include Tailwind CSS CDN -->
+    //       <script src="https://cdn.tailwindcss.com"></script>
+    //     </head>
+    //     <body class="bg-gray-100">
+    //       ${contentToSave}
+    //     </body>
+    //     </html>
+    //   `;
 
-      const blob = new Blob([fullHtml], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "template.html";
-      a.click();
-      URL.revokeObjectURL(url);
-    }, 50); // Wait for the state to update (50ms delay)
+    //   const blob = new Blob([fullHtml], { type: "text/html" });
+    //   const url = URL.createObjectURL(blob);
+    //   const a = document.createElement("a");
+    //   a.href = url;
+    //   a.download = "template.html";
+    //   a.click();
+    //   URL.revokeObjectURL(url);
+    // }, 50); // Wait for the state to update (50ms delay)
   };
 
   //function for defocusing all after editing
@@ -440,6 +470,8 @@ const EditTemplate = () => {
                       <div key={section.id} className="mb-5">
                         <LogoImageUploader
                           setPreview={setPreview}
+                          logo={logo}
+                          setLogo={setLogo}
                         ></LogoImageUploader>
                         {preview && (
                           <img
@@ -457,6 +489,8 @@ const EditTemplate = () => {
                       <div key={section.id} className="">
                         <MainImageUploader
                           setImagePreview={setImagePreview}
+                          setImage={setImage}
+                          image={image}
                         ></MainImageUploader>
                         {imagePreview && (
                           <img
