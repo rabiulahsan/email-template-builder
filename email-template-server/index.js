@@ -53,13 +53,14 @@ const templates = [
         id: 2,
         type: "title",
         content: "Edit your Title for the Email",
-        classes: "text-4xl font-bold text-center",
+        classes: "text-4xl font-bold text-center mt-4 px-3 py-2 cursor-pointer",
       },
       {
         id: 3,
         type: "title-desc",
         content: "Event details here...",
-        classes: "text-base text-center text-slate-600",
+        classes:
+          "text-base text-center text-slate-600 mb-6 px-3 py-2 cursor-pointer",
       },
       {
         id: 5,
@@ -80,14 +81,15 @@ const templates = [
         id: 7,
         type: "content",
         content: "Additional information here.",
-        classes: "",
+        classes:
+          "text-base text-center text-slate-600 mb-6 px-3 py-2 cursor-pointer",
       },
       {
         id: 8,
         type: "footer",
         content: "Copyright © 2025 - All right reserved by Company Name",
         classes:
-          "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5",
+          "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5 cursor-pointer",
       },
     ],
   },
