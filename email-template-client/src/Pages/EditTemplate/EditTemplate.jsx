@@ -37,6 +37,11 @@ const EditTemplate = () => {
   const [contentText, setContentText] = useState(""); // Content of the title
   const contentRef = useRef(null);
 
+  //for button styling
+  const [buttonFocused, setButtonFocused] = useState(false);
+  const [buttonText, setButtonText] = useState(""); // Content of the title
+  const buttonRef = useRef(null);
+
   //for footer
   const [footerFocused, setFooterFocused] = useState(false);
   const [footerText, setFooterText] = useState(""); // Content of the title
@@ -52,7 +57,7 @@ const EditTemplate = () => {
   const handleTitleClick = () => {
     setTitleFocused(true); // Enable editing
     setDescFocused(false);
-    setContentFocused(true);
+    setContentFocused(false);
     setFooterFocused(false);
     setShowColorPicker(false);
     setShowBgColorPicker(false);
@@ -67,11 +72,11 @@ const EditTemplate = () => {
     }
   };
 
-  //handle title content
+  //handle Desctiption content
   const handleDescClick = () => {
     setDescFocused(true); // Enable editing
     setTitleFocused(false);
-    setContentFocused(true);
+    setContentFocused(false);
     setFooterFocused(false);
     setShowColorPicker(false);
     setShowBgColorPicker(false);
@@ -83,6 +88,27 @@ const EditTemplate = () => {
     setDescText(e.target.value); // Update the state with the edited content
     if (descRef.current) {
       descRef.current.innerText = e.target.value; // Update the preview in real-time
+    }
+  };
+
+  //handle button content
+  const handleBtnClick = () => {
+    setButtonFocused(true); //Enable Editing
+    setTitleFocused(false);
+    setDescFocused(false);
+    setContentFocused(false);
+    setFooterFocused(false);
+    setShowColorPicker(false);
+    setShowBgColorPicker(false);
+    setButtonText(buttonRef.current.innerText); // Set the title content in the textarea
+    console.log(buttonText);
+  };
+
+  // button text will be changed based on input
+  const handleBtnChange = (e) => {
+    setButtonText(e.target.value); // Update the state with the edited content
+    if (buttonRef.current) {
+      buttonRef.current.innerText = e.target.value; // Update the preview in real-time
     }
   };
 
@@ -144,6 +170,11 @@ const EditTemplate = () => {
     "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5 cursor-pointer"
   );
 
+  //state for button initial class
+  const [initialButtonClass, setInitialButtonClass] = useState(
+    "bg-orange-500 text-white font-semibold py-2 px-5  rounded-sm hover:bg-orange-600 cursor-pointer"
+  );
+
   // Handle alignment click (single-choice)
   const handleAlignmentClick = (alignClass) => {
     if (titleFocused) {
@@ -173,6 +204,8 @@ const EditTemplate = () => {
       setInitialContentClass((prev) => toggleClass(prev, decorClass));
     } else if (footerFocused) {
       setInitialFooterClass((prev) => toggleClass(prev, decorClass));
+    } else if (buttonFocused) {
+      setInitialButtonClass((prev) => toggleClass(prev, decorClass));
     }
   };
 
@@ -189,6 +222,10 @@ const EditTemplate = () => {
       );
     } else if (footerFocused) {
       setInitialFooterClass((prev) =>
+        updateClass(prev, sizeClass, sizeOptions)
+      );
+    } else if (buttonFocused) {
+      setInitialButtonClass((prev) =>
         updateClass(prev, sizeClass, sizeOptions)
       );
     }
@@ -208,15 +245,20 @@ const EditTemplate = () => {
     } else if (footerFocused && footerRef.current) {
       //add style color to descRef
       footerRef.current.style.color = colorClass;
+    } else if (buttonFocused && buttonRef.current) {
+      //add style color to descRef
+      buttonRef.current.style.color = colorClass;
     }
   };
 
   //handle footer bg color change
   const handleBgColorClick = (colorClass) => {
-    console.log(colorClass);
     if (footerFocused && footerRef.current) {
       //add style color to descRef
       footerRef.current.style.backgroundColor = colorClass;
+    } else if (buttonFocused && buttonRef.current) {
+      //add style color to descRef
+      buttonRef.current.style.backgroundColor = colorClass;
     }
   };
 
@@ -333,11 +375,18 @@ const EditTemplate = () => {
                       key={section.id}
                       className="flex justify-center items-center my-6"
                     >
-                      <Link to={section.url}>
-                        <button className={section.classes}>
-                          {section.content}
-                        </button>
-                      </Link>
+                      <a
+                        href=""
+                        className={initialButtonClass}
+                        onClick={handleBtnClick}
+                        ref={buttonRef}
+                        contentEditable={buttonFocused}
+                        onInput={(e) =>
+                          setButtonText(e.currentTarget.innerText)
+                        }
+                      >
+                        {section.content}
+                      </a>
                     </div>
                   );
 
@@ -397,6 +446,8 @@ const EditTemplate = () => {
                 ? "Content Text"
                 : footerFocused
                 ? "Footer Text"
+                : buttonFocused
+                ? "Button Text"
                 : "Text"}
             </p>
 
@@ -488,6 +539,8 @@ const EditTemplate = () => {
                       handleContentChange(e);
                     } else if (footerFocused) {
                       handleFooterChange(e);
+                    } else if (buttonFocused) {
+                      handleBtnChange(e);
                     }
                   }}
                   value={
@@ -499,6 +552,8 @@ const EditTemplate = () => {
                       ? contentText
                       : footerFocused
                       ? footerText
+                      : buttonFocused
+                      ? buttonText
                       : ""
                   }
                 ></textarea>
@@ -753,7 +808,7 @@ const EditTemplate = () => {
             </div>
 
             {/* bg color button only for footer  */}
-            {footerFocused && (
+            {(footerFocused || buttonFocused) && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
                   Bg Color
@@ -834,7 +889,7 @@ const templates = [
         content: "Your Button",
         url: "/",
         classes:
-          "bg-orange-500 text-white font-semibold py-2 px-5  rounded-sm hover:bg-orange-600",
+          "bg-orange-500 text-white font-semibold py-2 px-5  rounded-sm hover:bg-orange-600 cursor-pointer",
       },
       { id: 6, type: "divider", content: "", classes: "border-t my-4" },
       {
