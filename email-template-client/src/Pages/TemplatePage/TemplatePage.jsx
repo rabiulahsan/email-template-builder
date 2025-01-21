@@ -12,9 +12,9 @@ const TemplatePage = () => {
   return (
     <div className="mx-[12%] my-[2%]">
       <div className="grid grid-cols-1 lg:grid-cols-3">
-        {templates?.map((template, idx) => (
-          <div key={idx}>
-            <Link to={`/edit/template/${template.id}`}>
+        {templates?.map((template) => (
+          <div key={template?._id}>
+            <Link to={`/edit/template/${template?._id}`}>
               <img
                 src={template.image}
                 alt={template.name}
