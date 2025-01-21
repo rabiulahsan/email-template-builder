@@ -68,7 +68,7 @@ const templates = [
         content: "Your Button",
         url: "/",
         classes:
-          "bg-orange-500 text-white font-semibold py-2 px-5  rounded-sm hover:bg-orange-600 cursor-pointer",
+          "bg-orange-500 text-white font-bold py-2 px-5  rounded-sm hover:bg-orange-600 cursor-pointer",
       },
       { id: 6, type: "divider", content: "", classes: "border-t my-4" },
       {

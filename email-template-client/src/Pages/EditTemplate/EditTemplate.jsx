@@ -594,13 +594,19 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("font-bold")
                         ? "bg-slate-100"
-                        : initialButtonClass.includes("font-bold")
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("font-bold")
                         ? "bg-slate-100"
                         : ""
-                      : initialContentClass.includes("font-bold")
-                      ? "bg-slate-100"
-                      : initialFooterClass.includes("font-bold")
-                      ? "bg-slate-100"
+                      : contentFocused
+                      ? initialContentClass.includes("font-bold")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("font-bold")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Bold"
@@ -617,13 +623,19 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("italic")
                         ? "bg-slate-100"
-                        : initialButtonClass.includes("italic")
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("italic")
                         ? "bg-slate-100"
                         : ""
-                      : initialContentClass.includes("italic")
-                      ? "bg-slate-100"
-                      : initialFooterClass.includes("italic")
-                      ? "bg-slate-100"
+                      : contentFocused
+                      ? initialContentClass.includes("italic")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("italic")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Italic"
@@ -640,13 +652,19 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("underline")
                         ? "bg-slate-100"
-                        : initialButtonClass.includes("underline")
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("underline")
                         ? "bg-slate-100"
                         : ""
-                      : initialContentClass.includes("underline")
-                      ? "bg-slate-100"
-                      : initialFooterClass.includes("underline")
-                      ? "bg-slate-100"
+                      : contentFocused
+                      ? initialContentClass.includes("underline")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("underline")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Underline"
@@ -663,13 +681,19 @@ const EditTemplate = () => {
                       : descFocused
                       ? initialDescClass.includes("line-through")
                         ? "bg-slate-100"
-                        : initialButtonClass.includes("line-through")
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("line-through")
                         ? "bg-slate-100"
                         : ""
-                      : initialContentClass.includes("line-through")
-                      ? "bg-slate-100"
-                      : initialFooterClass.includes("line-through")
-                      ? "bg-slate-100"
+                      : contentFocused
+                      ? initialContentClass.includes("line-through")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("line-through")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Strikethrough"
@@ -818,6 +842,18 @@ const EditTemplate = () => {
                       ? initialDescClass.includes("text-sm")
                         ? "bg-slate-100"
                         : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-sm")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-sm")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-sm")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Small"
@@ -833,6 +869,18 @@ const EditTemplate = () => {
                         : ""
                       : descFocused
                       ? initialDescClass.includes("text-base")
+                        ? "bg-slate-100"
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-base")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-base")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-base")
                         ? "bg-slate-100"
                         : ""
                       : ""
@@ -852,6 +900,18 @@ const EditTemplate = () => {
                       ? initialDescClass.includes("text-lg")
                         ? "bg-slate-100"
                         : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-lg")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-lg")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-lg")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="Large"
@@ -867,6 +927,18 @@ const EditTemplate = () => {
                         : ""
                       : descFocused
                       ? initialDescClass.includes("text-xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-xl")
                         ? "bg-slate-100"
                         : ""
                       : ""
@@ -886,6 +958,18 @@ const EditTemplate = () => {
                       ? initialDescClass.includes("text-2xl")
                         ? "bg-slate-100"
                         : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-2xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-2xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-2xl")
+                        ? "bg-slate-100"
+                        : ""
                       : ""
                   }`}
                   title="2 x Extra Large"
@@ -901,6 +985,18 @@ const EditTemplate = () => {
                         : ""
                       : descFocused
                       ? initialDescClass.includes("text-3xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-3xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-3xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-3xl")
                         ? "bg-slate-100"
                         : ""
                       : ""
@@ -919,6 +1015,18 @@ const EditTemplate = () => {
                         : ""
                       : descFocused
                       ? initialDescClass.includes("text-4xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : buttonFocused
+                      ? initialButtonClass.includes("text-4xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : contentFocused
+                      ? initialContentClass.includes("text-4xl")
+                        ? "bg-slate-100"
+                        : ""
+                      : footerFocused
+                      ? initialFooterClass.includes("text-4xl")
                         ? "bg-slate-100"
                         : ""
                       : ""
