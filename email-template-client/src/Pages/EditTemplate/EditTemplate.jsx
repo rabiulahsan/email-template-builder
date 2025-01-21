@@ -886,6 +886,12 @@ const EditTemplate = () => {
                 </div>
               </div>
             )}
+
+            <div className="mt-8 flex justify-center items-center">
+              <button className="text-white font-semibold bg-slate-800 rounded px-5 py-2">
+                Save & Download
+              </button>
+            </div>
           </div>
         </div>
       </div>
