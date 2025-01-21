@@ -18,7 +18,9 @@ const EditTemplate = () => {
 
   //for color picker
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showBgColorPicker, setShowBgColorPicker] = useState(false);
   const [color, setColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#000000");
 
   //for title
   const [titleFocused, setTitleFocused] = useState(false);
@@ -50,9 +52,10 @@ const EditTemplate = () => {
   const handleTitleClick = () => {
     setTitleFocused(true); // Enable editing
     setDescFocused(false);
-    setShowColorPicker(false);
     setContentFocused(true);
     setFooterFocused(false);
+    setShowColorPicker(false);
+    setShowBgColorPicker(false);
     setTitleText(titleRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -68,9 +71,10 @@ const EditTemplate = () => {
   const handleDescClick = () => {
     setDescFocused(true); // Enable editing
     setTitleFocused(false);
-    setShowColorPicker(false);
     setContentFocused(true);
     setFooterFocused(false);
+    setShowColorPicker(false);
+    setShowBgColorPicker(false);
     setDescText(descRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -87,8 +91,9 @@ const EditTemplate = () => {
     setContentFocused(true);
     setTitleFocused(false);
     setDescFocused(false);
-    setShowColorPicker(false);
     setFooterFocused(false);
+    setShowColorPicker(false);
+    setShowBgColorPicker(false);
     setContentText(contentRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -107,6 +112,7 @@ const EditTemplate = () => {
     setTitleFocused(false);
     setDescFocused(false);
     setShowColorPicker(false);
+    setShowBgColorPicker(false);
     setContentText(contentRef.current.innerText); // Set the title content in the textarea
   };
 
@@ -130,12 +136,12 @@ const EditTemplate = () => {
 
   //state for description initial class
   const [initialContentClass, setInitialContentClass] = useState(
-    "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
+    "text-base text-center text-slate-600 mb-6 px-3 py-2 cursor-pointer"
   );
 
   //state for footer initial class
   const [initialFooterClass, setInitialFooterClass] = useState(
-    "text-base text-center text-slate-600 mt-4 px-3 py-2 cursor-pointer"
+    "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5 cursor-pointer"
   );
 
   // Handle alignment click (single-choice)
@@ -158,6 +164,24 @@ const EditTemplate = () => {
           "text-right",
         ])
       );
+    } else if (contentFocused) {
+      setInitialContentClass((prev) =>
+        updateClass(prev, alignClass, [
+          "text-center",
+          "text-justify",
+          "text-left",
+          "text-right",
+        ])
+      );
+    } else if (footerFocused) {
+      setInitialFooterClass((prev) =>
+        updateClass(prev, alignClass, [
+          "text-center",
+          "text-justify",
+          "text-left",
+          "text-right",
+        ])
+      );
     }
   };
 
@@ -167,6 +191,10 @@ const EditTemplate = () => {
       setInitialClass((prev) => toggleClass(prev, decorClass));
     } else if (descFocused) {
       setInitialDescClass((prev) => toggleClass(prev, decorClass));
+    } else if (contentFocused) {
+      setInitialContentClass((prev) => toggleClass(prev, decorClass));
+    } else if (footerFocused) {
+      setInitialFooterClass((prev) => toggleClass(prev, decorClass));
     }
   };
 
@@ -196,6 +224,30 @@ const EditTemplate = () => {
           "text-4xl",
         ])
       );
+    } else if (contentFocused) {
+      setInitialContentClass((prev) =>
+        updateClass(prev, sizeClass, [
+          "text-sm",
+          "text-base",
+          "text-lg",
+          "text-xl",
+          "text-2xl",
+          "text-3xl",
+          "text-4xl",
+        ])
+      );
+    } else if (footerFocused) {
+      setInitialFooterClass((prev) =>
+        updateClass(prev, sizeClass, [
+          "text-sm",
+          "text-base",
+          "text-lg",
+          "text-xl",
+          "text-2xl",
+          "text-3xl",
+          "text-4xl",
+        ])
+      );
     }
   };
 
@@ -207,6 +259,21 @@ const EditTemplate = () => {
     } else if (descFocused && descRef.current) {
       //add style color to descRef
       descRef.current.style.color = colorClass;
+    } else if (contentFocused && contentRef.current) {
+      //add style color to descRef
+      contentRef.current.style.color = colorClass;
+    } else if (footerFocused && footerRef.current) {
+      //add style color to descRef
+      footerRef.current.style.color = colorClass;
+    }
+  };
+
+  //handle footer bg color change
+  const handleBgColorClick = (colorClass) => {
+    console.log(colorClass);
+    if (footerFocused && footerRef.current) {
+      //add style color to descRef
+      footerRef.current.style.backgroundColor = colorClass;
     }
   };
 
@@ -247,7 +314,7 @@ const EditTemplate = () => {
         {/* editing template preview  */}
         <div className=" flex justify-center items-center bg-slate-200 w-[70%] rounded-md border border-slate-400 py-5">
           {/* it is the main template  */}
-          <div className="w-[70%] mx-auto bg-white py-[4%] rounded-md">
+          <div className="w-[70%] mx-auto bg-white pt-[4%] rounded-md">
             {template[0]?.sections?.map((section) => {
               switch (section.type) {
                 //design for logo input
@@ -334,7 +401,7 @@ const EditTemplate = () => {
                 //design for the email content
                 case "content":
                   return (
-                    <div className="w-[70%] mx-auto" key={section.id}>
+                    <div className="w-[80%] mx-auto" key={section.id}>
                       <p
                         className={`${initialContentClass} `}
                         onClick={handleContentClick}
@@ -352,7 +419,7 @@ const EditTemplate = () => {
                 //design for the footer
                 case "footer":
                   return (
-                    <div className="w-[70%] mx-auto" key={section.id}>
+                    <div className="w-full" key={section.id}>
                       <p
                         className={`${initialFooterClass} `}
                         onClick={handleFooterClick}
@@ -367,18 +434,6 @@ const EditTemplate = () => {
                     </div>
                   );
 
-                //   case "social":
-                //     return (
-                //       <div key={section.id} className={section.classes}>
-                //         {section.links.map((link, idx) => (
-                //           <a key={idx} href={link.url}>
-                //             {link.platform}
-                //           </a>
-                //         ))}
-                //       </div>
-                //     );
-                //   case "divider":
-                //     return <hr key={section.id} className={section.classes} />;
                 default:
                   return null;
               }
@@ -395,6 +450,10 @@ const EditTemplate = () => {
                 ? "Title Text"
                 : descFocused
                 ? "Description Text"
+                : contentFocused
+                ? "Content Text"
+                : footerFocused
+                ? "Footer Text"
                 : "Text"}
             </p>
 
@@ -482,9 +541,23 @@ const EditTemplate = () => {
                       handleTitleChange(e);
                     } else if (descFocused) {
                       handleDescChange(e);
+                    } else if (contentFocused) {
+                      handleContentChange(e);
+                    } else if (footerFocused) {
+                      handleFooterChange(e);
                     }
                   }}
-                  value={titleFocused ? titleText : descFocused ? descText : ""}
+                  value={
+                    titleFocused
+                      ? titleText
+                      : descFocused
+                      ? descText
+                      : contentFocused
+                      ? contentText
+                      : footerFocused
+                      ? footerText
+                      : ""
+                  }
                 ></textarea>
               </div>
             </div>
@@ -735,6 +808,49 @@ const EditTemplate = () => {
                 )}
               </div>
             </div>
+
+            {/* bg color button only for footer  */}
+            {footerFocused && (
+              <div className="mt-5">
+                <p className="text-slate-600 text-sm font-semibold mb-2">
+                  Bg Color
+                </p>
+                <div className="flex gap-x-2 items-center">
+                  {colorSamples.map((clr, idx) => (
+                    <div
+                      style={{ backgroundColor: clr.color }}
+                      className="rounded w-[40px] h-[40px] cursor-pointer"
+                      key={idx}
+                      onClick={() => handleBgColorClick(clr.color)}
+                    ></div>
+                  ))}
+
+                  {/* color picker button */}
+                  <div
+                    onClick={() => setShowBgColorPicker(!showBgColorPicker)}
+                    className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+                  >
+                    {showBgColorPicker ? "x" : "+"}
+                  </div>
+
+                  {/* Color Picker */}
+                  {showBgColorPicker && (
+                    <div className="absolute mt-2 p-2 border rounded bg-white shadow">
+                      <SketchPicker
+                        color={bgColor} // Current color state
+                        onChange={(bg_clr) => {
+                          setBgColor(bg_clr.hex); // Update the current color state
+                          handleBgColorClick(bg_clr.hex); // Apply the color dynamically
+                        }}
+                        onChangeComplete={(bg_clr) => {
+                          console.log("Final color selected:", bg_clr.hex); // Optional: Log the final color
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -788,24 +904,25 @@ const templates = [
         id: 7,
         type: "content",
         content: "Additional information here.",
-        classes: "text-base text-left",
+        classes: "",
       },
       {
         id: 8,
         type: "footer",
-        content: "Contact us at contact@example.com",
-        classes: "text-sm text-center mt-4",
+        content: "Copyright © 2025 - All right reserved by Company Name",
+        classes:
+          "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5",
       },
-      {
-        id: 9,
-        type: "social",
-        links: [
-          { platform: "facebook", url: "https://facebook.com" },
-          { platform: "twitter", url: "https://twitter.com" },
-          { platform: "instagram", url: "https://instagram.com" },
-        ],
-        classes: "flex justify-center mt-4 space-x-4",
-      },
+      // {
+      //   id: 9,
+      //   type: "social",
+      //   links: [
+      //     { platform: "facebook", url: "https://facebook.com" },
+      //     { platform: "twitter", url: "https://twitter.com" },
+      //     { platform: "instagram", url: "https://instagram.com" },
+      //   ],
+      //   classes: "flex justify-center mt-4 space-x-4",
+      // },
     ],
   },
   {
