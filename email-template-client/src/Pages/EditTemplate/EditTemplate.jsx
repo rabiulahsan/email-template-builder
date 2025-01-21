@@ -69,7 +69,7 @@ const EditTemplate = () => {
   const templateId = useParams().id;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/templates/${templateId}`)
+    fetch(`http://localhost:5000/api/get/templates/${templateId}`)
       .then((res) => {
         if (res.ok) {
           res.json().then((data) => {
