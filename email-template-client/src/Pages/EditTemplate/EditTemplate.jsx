@@ -920,16 +920,6 @@ const templates = [
         classes:
           "text-base text-center bg-slate-800 font-semibold flex justify-center items-center text-white py-5",
       },
-      // {
-      //   id: 9,
-      //   type: "social",
-      //   links: [
-      //     { platform: "facebook", url: "https://facebook.com" },
-      //     { platform: "twitter", url: "https://twitter.com" },
-      //     { platform: "instagram", url: "https://instagram.com" },
-      //   ],
-      //   classes: "flex justify-center mt-4 space-x-4",
-      // },
     ],
   },
   {
