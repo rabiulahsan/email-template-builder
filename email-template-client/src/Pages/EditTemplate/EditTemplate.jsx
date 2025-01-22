@@ -75,7 +75,9 @@ const EditTemplate = () => {
   const templateId = useParams().id;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/get/templates/${templateId}`)
+    fetch(
+      `https://email-template-server-three.vercel.app/api/get/templates/${templateId}`
+    )
       .then((res) => {
         if (res.ok) {
           res.json().then((data) => {
@@ -418,7 +420,7 @@ const EditTemplate = () => {
     try {
       // Post the updated template to the API
       const response = await fetch(
-        "http://localhost:5000/api/create/template",
+        "https://email-template-server-three.vercel.app/api/create/template",
         {
           method: "POST",
           headers: {

@@ -5,7 +5,9 @@ const TemplatePage = () => {
   const { data: templates } = useQuery({
     querykey: "templates",
     queryFn: async () => {
-      const response = await fetch("http://localhost:5000/api/get/templates");
+      const response = await fetch(
+        "https://email-template-server-three.vercel.app/api/get/templates"
+      );
       return response.json();
     },
   });
