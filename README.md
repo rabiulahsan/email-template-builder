@@ -14,6 +14,7 @@
 
 
 ## **Overview**
+<img src="email-template-client/public/project_overview/overview.png" alt="project_overview" height="500">  
 
 **MailCanvas** is a dynamic **Email Template Building** application that empowers users to create and customize professional email designs with ease. It offers a variety of pre-designed templates that users can personalize with advanced editing options to suit their branding or communication needs.
 
@@ -44,11 +45,15 @@
 ## **Features**
 
 ### **Templates Page**  
+  <img src="email-template-client/public/project_overview/templates page.png" alt="Templates Page" height="300"> 
+  
 - Here you will find some build-in templates for your editing
 
 
 
 ### **Editing Page**  
+<img src="email-template-client/public/project_overview/editing page.png" alt="Editing Page" height="400">  
+
 - Edit text, buttons (with URLs), and background color.
 - Add logos and main images seamlessly.
 - Customize the title, add small details, and write extended content.
