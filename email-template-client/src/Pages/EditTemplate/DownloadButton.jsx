@@ -54,31 +54,41 @@ const DownloadButton = ({
     setSaveLoading(true); //set the save loading to true
 
     // URL for uploading images
-    const uploadImageUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
+    const uploadToCloudinary = async (imageFile) => {
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
 
-    //function to upload image to imgbb
-    const uploadToImgBB = async (image) => {
+      // Create FormData to send the file
       const formData = new FormData();
-      formData.append("image", image);
+      formData.append("file", imageFile); // The file selected in the input
+      formData.append("upload_preset", uploadPreset); // Upload preset from Cloudinary
 
-      const response = await fetch(uploadImageUrl, {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to upload image");
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Cloudinary Error:", errorData);
+          throw new Error(errorData.error.message || "Image upload failed");
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data.secure_url; // Return the secure URL of the uploaded image
+      } catch (error) {
+        console.error("Upload Error:", error);
+        throw error;
       }
-
-      //returning the url of the uploaded image
-      const data = await response.json();
-      return data.data.display_url; // URL of the uploaded image
     };
 
-    // Upload both images and taking the url
+    // Example usage: Upload images
     const [logoUrl, mainImageUrl] = await Promise.all([
-      uploadToImgBB(logo),
-      uploadToImgBB(image),
+      uploadToCloudinary(logo),
+      uploadToCloudinary(image),
     ]);
 
     // Update the template sections
@@ -117,7 +127,8 @@ const DownloadButton = ({
       }
       return section;
     });
-    console.log(updatedTemplate);
+    //
+
     // Post the updated template to the API
     try {
       // Post the updated template to the API
@@ -140,8 +151,6 @@ const DownloadButton = ({
       console.log("Template created successfully:", result);
 
       if (result.result?.insertedId) {
-        // Display success toast
-
         // Trigger download
         setTimeout(() => {
           const contentToSave = templateRef.current.innerHTML;
