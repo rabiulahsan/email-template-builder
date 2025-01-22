@@ -1,17 +1,16 @@
 import { Link, useParams } from "react-router";
 import LogoImageUploader from "../../Components/LogoImageUploader/LogoImageUploader";
 import { useEffect, useRef, useState } from "react";
-import { SketchPicker } from "react-color";
 import { HashLoader } from "react-spinners";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import MainImageUploader from "../../Components/MainImageUploader/MainImageUploader";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import {
-  MdFormatAlignLeft,
-  MdFormatAlignRight,
-  MdFormatAlignJustify,
-  MdFormatAlignCenter,
-} from "react-icons/md";
+import TextEditingBox from "./TextEditingBox";
+import AlignmentEditing from "./AlignmentEditing";
+import FontSizeEditing from "./FontSizeEditing";
+import FontColorEditing from "./FontColorEditing";
+import BgColorEditing from "./BgColorEditing";
+import DownloadButton from "./DownloadButton";
 
 const EditTemplate = () => {
   const [loading, setLoading] = useState(true);
@@ -27,53 +26,48 @@ const EditTemplate = () => {
   //for color picker
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showBgColorPicker, setShowBgColorPicker] = useState(false);
-  const [color, setColor] = useState("#000000");
-  const [bgColor, setBgColor] = useState("#000000");
 
   //for title
+  //state for initial class for title
+  const [initialClass, setInitialClass] = useState("");
   const [titleFocused, setTitleFocused] = useState(false);
   const [titleText, setTitleText] = useState(""); // Content of the title
   const titleRef = useRef(null);
 
-  //for title descriptin
+  //for title description
+  //state for description initial class
+  const [initialDescClass, setInitialDescClass] = useState("");
   const [descFocused, setDescFocused] = useState(false);
   const [descText, setDescText] = useState(""); // Content of the title
   const descRef = useRef(null);
 
   //for content
+  //state for description initial class
+  const [initialContentClass, setInitialContentClass] = useState("");
   const [contentFocused, setContentFocused] = useState(false);
   const [contentText, setContentText] = useState(""); // Content of the title
   const contentRef = useRef(null);
 
   //for button styling
+  //state for footer initial class
+  const [initialFooterClass, setInitialFooterClass] = useState("");
   const [buttonFocused, setButtonFocused] = useState(false);
   const [buttonText, setButtonText] = useState(""); // Content of the title
   const buttonRef = useRef(null);
   const [buttonUrl, setButtonUrl] = useState("");
 
   //for footer
+
+  //state for button initial class
+  const [initialButtonClass, setInitialButtonClass] = useState("");
   const [footerFocused, setFooterFocused] = useState(false);
   const [footerText, setFooterText] = useState(""); // Content of the title
   const footerRef = useRef(null);
 
-  // all default classes for styling the preview
-  //state for initial class
-  const [initialClass, setInitialClass] = useState("");
-
-  //state for description initial class
-  const [initialDescClass, setInitialDescClass] = useState("");
-
-  //state for description initial class
-  const [initialContentClass, setInitialContentClass] = useState("");
-
-  //state for footer initial class
-  const [initialFooterClass, setInitialFooterClass] = useState("");
-
-  //state for button initial class
-  const [initialButtonClass, setInitialButtonClass] = useState("");
-
+  //get the template id from the url
   const templateId = useParams().id;
 
+  //fetching the template from the server and set to initial states
   useEffect(() => {
     fetch(
       `https://email-template-server-three.vercel.app/api/get/templates/${templateId}`
@@ -223,29 +217,6 @@ const EditTemplate = () => {
     }
   };
 
-  // Handle alignment click (single-choice)
-  const handleAlignmentClick = (alignClass) => {
-    if (titleFocused) {
-      setInitialClass((prev) => updateClass(prev, alignClass, alignOptions));
-    } else if (descFocused) {
-      setInitialDescClass((prev) =>
-        updateClass(prev, alignClass, alignOptions)
-      );
-    } else if (contentFocused) {
-      setInitialContentClass((prev) =>
-        updateClass(prev, alignClass, alignOptions)
-      );
-    } else if (footerFocused) {
-      setInitialFooterClass((prev) =>
-        updateClass(prev, alignClass, alignOptions)
-      );
-    } else if (buttonFocused) {
-      setInitialButtonClass((prev) =>
-        updateClass(prev, alignClass, alignOptions)
-      );
-    }
-  };
-
   // Handle decoration click (multiple-choice)
   const handleDecorationClick = (decorClass) => {
     if (titleFocused) {
@@ -258,59 +229,6 @@ const EditTemplate = () => {
       setInitialFooterClass((prev) => toggleClass(prev, decorClass));
     } else if (buttonFocused) {
       setInitialButtonClass((prev) => toggleClass(prev, decorClass));
-    }
-  };
-
-  // Handle size click (single-choice)
-  // here size options are declared below
-  const handleSizeClick = (sizeClass) => {
-    if (titleFocused) {
-      setInitialClass((prev) => updateClass(prev, sizeClass, sizeOptions));
-    } else if (descFocused) {
-      setInitialDescClass((prev) => updateClass(prev, sizeClass, sizeOptions));
-    } else if (contentFocused) {
-      setInitialContentClass((prev) =>
-        updateClass(prev, sizeClass, sizeOptions)
-      );
-    } else if (footerFocused) {
-      setInitialFooterClass((prev) =>
-        updateClass(prev, sizeClass, sizeOptions)
-      );
-    } else if (buttonFocused) {
-      setInitialButtonClass((prev) =>
-        updateClass(prev, sizeClass, sizeOptions)
-      );
-    }
-  };
-
-  //handle the color for text
-  const handleColorClick = (colorClass) => {
-    if (titleFocused && titleRef.current) {
-      //add style color to titleRef
-      titleRef.current.style.color = colorClass;
-    } else if (descFocused && descRef.current) {
-      //add style color to descRef
-      descRef.current.style.color = colorClass;
-    } else if (contentFocused && contentRef.current) {
-      //add style color to descRef
-      contentRef.current.style.color = colorClass;
-    } else if (footerFocused && footerRef.current) {
-      //add style color to descRef
-      footerRef.current.style.color = colorClass;
-    } else if (buttonFocused && buttonRef.current) {
-      //add style color to descRef
-      buttonRef.current.style.color = colorClass;
-    }
-  };
-
-  //handle footer bg color change
-  const handleBgColorClick = (colorClass) => {
-    if (footerFocused && footerRef.current) {
-      //add style color to descRef
-      footerRef.current.style.backgroundColor = colorClass;
-    } else if (buttonFocused && buttonRef.current) {
-      //add style color to descRef
-      buttonRef.current.style.backgroundColor = colorClass;
     }
   };
 
@@ -330,149 +248,6 @@ const EditTemplate = () => {
       return clsArr.filter((cls) => cls !== toggleClass).join(" "); // Remove class
     } else {
       return [...clsArr, toggleClass].join(" "); // Add class
-    }
-  };
-
-  //function for handle downloading
-  const handleSaveandDownload = async () => {
-    // Reset all states immediately
-    setButtonFocused(false);
-    setTitleFocused(false); // Ensure title is unfocused
-    setDescFocused(false);
-    setContentFocused(false);
-    setFooterFocused(false);
-    setShowColorPicker(false);
-    setShowBgColorPicker(false);
-
-    if (!logo || !image) {
-      showToast("Please upload both images", "error");
-      setSaveLoading(false); // Reset the save loading state
-      return;
-    }
-    setSaveLoading(true); //set the save loading to true
-
-    // URL for uploading images
-    const uploadImageUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
-
-    //function to upload image to imgbb
-    const uploadToImgBB = async (image) => {
-      const formData = new FormData();
-      formData.append("image", image);
-
-      const response = await fetch(uploadImageUrl, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload image");
-      }
-
-      //returning the url of the uploaded image
-      const data = await response.json();
-      return data.data.display_url; // URL of the uploaded image
-    };
-
-    // Upload both images and taking the url
-    const [logoUrl, mainImageUrl] = await Promise.all([
-      uploadToImgBB(logo),
-      uploadToImgBB(image),
-    ]);
-
-    // Update the template sections
-    const updatedTemplate = { ...template }; // Copy the original template object
-    updatedTemplate.sections = updatedTemplate.sections.map((section) => {
-      switch (section.type) {
-        case "logo":
-          section.url = logoUrl;
-          break;
-        case "image":
-          section.url = mainImageUrl;
-          break;
-        case "title-button":
-          section.url = buttonUrl;
-          section.classes = initialButtonClass;
-          section.content = buttonText;
-          break;
-        case "title":
-          section.classes = initialClass;
-          section.content = titleText;
-          break;
-        case "title-desc":
-          section.classes = initialDescClass;
-          section.content = descText;
-          break;
-        case "content":
-          section.classes = initialContentClass;
-          section.content = contentText;
-          break;
-        case "footer":
-          section.classes = initialFooterClass;
-          section.content = footerText;
-          break;
-        default:
-          console.warn(`Unknown section type: ${section.type}`);
-      }
-      return section;
-    });
-    console.log(updatedTemplate);
-    // Post the updated template to the API
-    try {
-      // Post the updated template to the API
-      const response = await fetch(
-        "https://email-template-server-three.vercel.app/api/create/template",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedTemplate),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to post the template");
-      }
-
-      const result = await response.json();
-      console.log("Template created successfully:", result);
-
-      if (result.result?.insertedId) {
-        // Display success toast
-
-        // Trigger download
-        setTimeout(() => {
-          const contentToSave = templateRef.current.innerHTML;
-
-          const fullHtml = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Email Template</title>
-              <!-- Include Tailwind CSS CDN -->
-              <script src="https://cdn.tailwindcss.com"></script>
-            </head>
-            <body class="bg-gray-100">
-              ${contentToSave}
-            </body>
-            </html>
-          `;
-
-          const blob = new Blob([fullHtml], { type: "text/html" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "template.html";
-          a.click();
-          URL.revokeObjectURL(url);
-        }, 50);
-      }
-    } catch (error) {
-      console.log("Error in updating template:", error);
-    } finally {
-      setSaveLoading(false); // Reset the save loading state
     }
   };
 
@@ -515,6 +290,58 @@ const EditTemplate = () => {
     };
   }, []); // Empty dependency array ensures the effect runs only once
 
+  // this are all variables which are sent to components as props
+  const focusStates = {
+    titleFocused,
+    descFocused,
+    buttonFocused,
+    contentFocused,
+    footerFocused,
+  };
+
+  const setFocusStates = {
+    setTitleFocused,
+    setDescFocused,
+    setButtonFocused,
+    setContentFocused,
+    setFooterFocused,
+  };
+  const initialClasses = {
+    initialClass,
+    initialDescClass,
+    initialButtonClass,
+    initialContentClass,
+    initialFooterClass,
+  };
+
+  const setClassesStates = {
+    setInitialClass,
+    setInitialDescClass,
+    setInitialButtonClass,
+    setInitialContentClass,
+    setInitialFooterClass,
+    updateClass,
+  };
+
+  const texts = {
+    titleText,
+    descText,
+    buttonText,
+    contentText,
+    footerText,
+  };
+
+  const allRefs = { titleRef, descRef, contentRef, footerRef, buttonRef };
+
+  const handlers = {
+    handleDecorationClick,
+    handleTitleChange,
+    handleDescChange,
+    handleBtnChange,
+    handleContentChange,
+    handleFooterChange,
+  };
+
   //loading design is here
   if (loading) {
     return (
@@ -523,6 +350,7 @@ const EditTemplate = () => {
       </div>
     );
   }
+
   return (
     <div className=" bg-slate-200 p-[2%]">
       {/* top bar of the page  */}
@@ -714,253 +542,29 @@ const EditTemplate = () => {
                 ? "Footer Text"
                 : buttonFocused
                 ? "Button Text"
-                : "Text"}
+                : "Select for Editing Text"}
             </p>
-
             {/* decoration options  */}
-            <div className="border border-slate-300 rounded-md px-3 py-2">
-              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
-                <p
-                  className={`flex-1 px-3 py-2 font-bold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("font-bold")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("font-bold")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("font-bold")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("font-bold")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("font-bold")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Bold"
-                  onClick={() => handleDecorationClick("font-bold")}
-                >
-                  B
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 italic text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("italic")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("italic")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("italic")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("italic")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("italic")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Italic"
-                  onClick={() => handleDecorationClick("italic")}
-                >
-                  I
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 underline text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("underline")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("underline")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("underline")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("underline")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("underline")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Underline"
-                  onClick={() => handleDecorationClick("underline")}
-                >
-                  U
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 line-through text-center hover:bg-slate-100 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("line-through")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("line-through")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("line-through")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("line-through")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("line-through")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Strikethrough"
-                  onClick={() => handleDecorationClick("line-through")}
-                >
-                  T
-                </p>
-              </div>
-
-              {/* write the text here  */}
-              <div className="mt-4">
-                <textarea
-                  className="w-full text-sm bg-white outline-none focus:outline-none rounded-md resize-none"
-                  placeholder="Select to change text"
-                  rows="6"
-                  onChange={(e) => {
-                    if (titleFocused) {
-                      handleTitleChange(e);
-                    } else if (descFocused) {
-                      handleDescChange(e);
-                    } else if (contentFocused) {
-                      handleContentChange(e);
-                    } else if (footerFocused) {
-                      handleFooterChange(e);
-                    } else if (buttonFocused) {
-                      handleBtnChange(e);
-                    }
-                  }}
-                  value={
-                    titleFocused
-                      ? titleText
-                      : descFocused
-                      ? descText
-                      : contentFocused
-                      ? contentText
-                      : footerFocused
-                      ? footerText
-                      : buttonFocused
-                      ? buttonText
-                      : ""
-                  }
-                ></textarea>
-              </div>
-            </div>
-
+            <TextEditingBox
+              focusStates={focusStates}
+              initialClasses={initialClasses}
+              texts={texts}
+              handlers={handlers}
+            ></TextEditingBox>
             {/* alignment button  */}
             {!buttonFocused && !footerFocused && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
                   Alignment
                 </p>
-                <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
-                  <p
-                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                      titleFocused
-                        ? initialClass.includes("text-left")
-                          ? "bg-slate-100"
-                          : ""
-                        : descFocused
-                        ? initialDescClass.includes("text-left")
-                          ? "bg-slate-100"
-                          : ""
-                        : initialContentClass.includes("text-left")
-                        ? "bg-slate-100"
-                        : ""
-                    }`}
-                    title="Left"
-                    onClick={() => handleAlignmentClick("text-left")}
-                  >
-                    <MdFormatAlignLeft size={20} />
-                  </p>
-                  <p
-                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                      titleFocused
-                        ? initialClass.includes("text-right")
-                          ? "bg-slate-100"
-                          : ""
-                        : descFocused
-                        ? initialDescClass.includes("text-right")
-                          ? "bg-slate-100"
-                          : ""
-                        : initialContentClass.includes("text-right")
-                        ? "bg-slate-100"
-                        : ""
-                    }`}
-                    title="Right"
-                    onClick={() => handleAlignmentClick("text-right")}
-                  >
-                    <MdFormatAlignRight size={20} />
-                  </p>
-                  <p
-                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 border-r border-slate-300 cursor-pointer flex justify-center items-center ${
-                      titleFocused
-                        ? initialClass.includes("text-center")
-                          ? "bg-slate-100"
-                          : ""
-                        : descFocused
-                        ? initialDescClass.includes("text-center")
-                          ? "bg-slate-100"
-                          : ""
-                        : initialContentClass.includes("text-center")
-                        ? "bg-slate-100"
-                        : ""
-                    }`}
-                    title="Center"
-                    onClick={() => handleAlignmentClick("text-center")}
-                  >
-                    <MdFormatAlignCenter size={20} />
-                  </p>
-                  <p
-                    className={`flex-1 px-3 py-2 font-bold text-center hover:bg-slate-100 cursor-pointer flex justify-center items-center ${
-                      titleFocused
-                        ? initialClass.includes("text-justify")
-                          ? "bg-slate-100"
-                          : ""
-                        : descFocused
-                        ? initialDescClass.includes("text-justify")
-                          ? "bg-slate-100"
-                          : ""
-                        : initialContentClass.includes("text-justify")
-                        ? "bg-slate-100"
-                        : ""
-                    }`}
-                    title="Justify"
-                    onClick={() => handleAlignmentClick("text-justify")}
-                  >
-                    <MdFormatAlignJustify size={20} />
-                  </p>
-                </div>
+                <AlignmentEditing
+                  focusStates={focusStates}
+                  setClassesStates={setClassesStates}
+                  initialClasses={initialClasses}
+                ></AlignmentEditing>
               </div>
             )}
-
+            {/* text area for changing the button url  */}
             {buttonFocused && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
@@ -977,218 +581,16 @@ const EditTemplate = () => {
                 ></textarea>
               </div>
             )}
-
             {/* Font size button  */}
             <div className="mt-5">
               <p className="text-slate-600 text-sm font-semibold mb-2">
                 Font Size
               </p>
-              <div className="flex border border-slate-300 rounded-md overflow-hidden text-slate-700">
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-sm")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-sm")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-sm")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-sm")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-sm")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Small"
-                  onClick={() => handleSizeClick("text-sm")}
-                >
-                  sm
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-base")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-base")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-base")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-base")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-base")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Base"
-                  onClick={() => handleSizeClick("text-base")}
-                >
-                  md
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-lg")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-lg")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-lg")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-lg")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-lg")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Large"
-                  onClick={() => handleSizeClick("text-lg")}
-                >
-                  lg
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="Exltra Large"
-                  onClick={() => handleSizeClick("text-xl")}
-                >
-                  xl
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-2xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-2xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-2xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-2xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-2xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="2 x Extra Large"
-                  onClick={() => handleSizeClick("text-2xl")}
-                >
-                  2xl
-                </p>
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold text-center  hover:bg-slate-100 border-r border-slate-300 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-3xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-3xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-3xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-3xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-3xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="3 x Extra Large"
-                  onClick={() => handleSizeClick("text-3xl")}
-                >
-                  3xl
-                </p>
-
-                <p
-                  className={`flex-1 px-3 py-2 font-semibold  text-center hover:bg-slate-100 cursor-pointer ${
-                    titleFocused
-                      ? initialClass.includes("text-4xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : descFocused
-                      ? initialDescClass.includes("text-4xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : buttonFocused
-                      ? initialButtonClass.includes("text-4xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : contentFocused
-                      ? initialContentClass.includes("text-4xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : footerFocused
-                      ? initialFooterClass.includes("text-4xl")
-                        ? "bg-slate-100"
-                        : ""
-                      : ""
-                  }`}
-                  title="4 x Extra Large"
-                  onClick={() => handleSizeClick("text-4xl")}
-                >
-                  4xl
-                </p>
-              </div>
+              <FontSizeEditing
+                focusStates={focusStates}
+                setClassesStates={setClassesStates}
+                initialClasses={initialClasses}
+              ></FontSizeEditing>
             </div>
 
             {/* font color button  */}
@@ -1196,93 +598,45 @@ const EditTemplate = () => {
               <p className="text-slate-600 text-sm font-semibold mb-2">
                 Text Color
               </p>
-              <div className="flex gap-x-2 items-center">
-                {colorSamples.map((clr, idx) => (
-                  <div
-                    style={{ backgroundColor: clr.color }}
-                    className="rounded w-[40px] h-[40px] cursor-pointer"
-                    key={idx}
-                    onClick={() => handleColorClick(clr.color)}
-                  ></div>
-                ))}
-
-                {/* color picker button */}
-                <div
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer"
-                >
-                  {showColorPicker ? "x" : "+"}
-                </div>
-
-                {/* Color Picker */}
-                {showColorPicker && (
-                  <div className="absolute mt-2 p-2 border rounded bg-white shadow">
-                    <SketchPicker
-                      color={color} // Current color state
-                      onChange={(color) => {
-                        setColor(color.hex); // Update the current color state
-                        handleColorClick(color.hex); // Apply the color dynamically
-                      }}
-                      onChangeComplete={(color) => {
-                        console.log("Final color selected:", color.hex); // Optional: Log the final color
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+              {/* pass props for functioning this to font color editing */}
+              <FontColorEditing
+                setShowColorPicker={setShowColorPicker}
+                showColorPicker={showColorPicker}
+                focusStates={focusStates}
+                allRefs={allRefs}
+              ></FontColorEditing>
             </div>
-
             {/* bg color button only for footer  */}
             {(footerFocused || buttonFocused) && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
                   Backgrount Color
                 </p>
-                <div className="flex gap-x-2 items-center">
-                  {colorSamples.map((clr, idx) => (
-                    <div
-                      style={{ backgroundColor: clr.color }}
-                      className="rounded w-[40px] h-[40px] cursor-pointer"
-                      key={idx}
-                      onClick={() => handleBgColorClick(clr.color)}
-                    ></div>
-                  ))}
 
-                  {/* color picker button */}
-                  <div
-                    onClick={() => setShowBgColorPicker(!showBgColorPicker)}
-                    className="flex justify-center items-center rounded w-[40px] h-[40px]  font-semibold text-2xl border border-slate-400 bg-slate-100 hover:bg-slate-200 cursor-pointer"
-                  >
-                    {showBgColorPicker ? "x" : "+"}
-                  </div>
-
-                  {/* Color Picker */}
-                  {showBgColorPicker && (
-                    <div className="absolute mt-2 p-2 border rounded bg-white shadow">
-                      <SketchPicker
-                        color={bgColor} // Current color state
-                        onChange={(bg_clr) => {
-                          setBgColor(bg_clr.hex); // Update the current color state
-                          handleBgColorClick(bg_clr.hex); // Apply the color dynamically
-                        }}
-                        onChangeComplete={(bg_clr) => {
-                          console.log("Final color selected:", bg_clr.hex); // Optional: Log the final color
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
+                {/* pass props for functioning this to bg color editing */}
+                <BgColorEditing
+                  focusStates={focusStates}
+                  allRefs={allRefs}
+                  showBgColorPicker={showBgColorPicker}
+                  setShowBgColorPicker={setShowBgColorPicker}
+                ></BgColorEditing>
               </div>
             )}
 
-            <div className="mt-8 flex justify-center items-center">
-              <button
-                onClick={handleSaveandDownload}
-                className="text-white font-semibold bg-slate-800 rounded px-5 py-2"
-              >
-                Save & Download
-              </button>
-            </div>
+            {/* download button and pass props for functioning this to save and download the html layout*/}
+            <DownloadButton
+              setFocusStates={setFocusStates}
+              initialClasses={initialClasses}
+              texts={texts}
+              logo={logo}
+              image={image}
+              setShowColorPicker={setShowColorPicker}
+              setShowBgColorPicker={setShowBgColorPicker}
+              buttonUrl={buttonUrl}
+              setSaveLoading={setSaveLoading}
+              template={template}
+              templateRef={templateRef}
+            ></DownloadButton>
           </div>
         </div>
       </div>
@@ -1292,40 +646,3 @@ const EditTemplate = () => {
 };
 
 export default EditTemplate;
-
-//for displaying the toast
-const showToast = (message, type = "info", position = "top-right") => {
-  toast(message, {
-    position,
-    type,
-    autoClose: 5000, // Auto close after 5 seconds
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
-
-//color samples
-const colorSamples = [
-  { id: 1, color: "#0284C7" }, // sky-600
-  { id: 2, color: "#6B21A8" }, // purple-700
-  { id: 3, color: "#000000" }, // black
-  { id: 4, color: "#334155" }, // slate-700
-  { id: 5, color: "#F97316" }, // orange-500
-  { id: 6, color: "#22C55E" }, // green-500
-  { id: 7, color: "#F43F5E" }, // rose-500
-];
-
-const sizeOptions = [
-  "text-sm",
-  "text-base",
-  "text-lg",
-  "text-xl",
-  "text-2xl",
-  "text-3xl",
-  "text-4xl",
-];
-
-const alignOptions = ["text-center", "text-justify", "text-left", "text-right"];
