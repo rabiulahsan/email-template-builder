@@ -100,6 +100,7 @@ const EditTemplate = () => {
                 case "title-button":
                   setInitialButtonClass(section.classes);
                   setButtonText(section.content);
+                  setButtonUrl(section.url);
                   break;
                 case "footer":
                   setInitialFooterClass(section.classes);
@@ -412,7 +413,7 @@ const EditTemplate = () => {
       }
       return section;
     });
-
+    console.log(updatedTemplate);
     // Post the updated template to the API
     try {
       // Post the updated template to the API
@@ -436,7 +437,6 @@ const EditTemplate = () => {
 
       if (result.result?.insertedId) {
         // Display success toast
-        showToast("Template saved successfully", "success");
 
         // Trigger download
         setTimeout(() => {
@@ -466,15 +466,9 @@ const EditTemplate = () => {
           a.click();
           URL.revokeObjectURL(url);
         }, 50);
-
-        // Toast after download
-        showToast("Template downloaded successfully", "success");
-      } else {
-        showToast("Failed to save template", "error");
       }
     } catch (error) {
       console.log("Error in updating template:", error);
-      showToast("An error occurred while saving the template", "error");
     } finally {
       setSaveLoading(false); // Reset the save loading state
     }
@@ -645,7 +639,6 @@ const EditTemplate = () => {
                           }`}
                         >
                           <a
-                            // href=""
                             className={initialButtonClass}
                             onClick={handleBtnClick}
                             ref={buttonRef}
@@ -966,6 +959,23 @@ const EditTemplate = () => {
               </div>
             )}
 
+            {buttonFocused && (
+              <div className="mt-5">
+                <p className="text-slate-600 text-sm font-semibold mb-2">
+                  Button URL
+                </p>
+                <textarea
+                  className="w-full text-sm bg-white px-4 py-2 border border-slate-300  focus:outline-none rounded-md resize-none"
+                  placeholder="Give your button a URL"
+                  rows="3"
+                  onChange={(e) => {
+                    setButtonUrl(e.target.value);
+                  }}
+                  value={buttonUrl}
+                ></textarea>
+              </div>
+            )}
+
             {/* Font size button  */}
             <div className="mt-5">
               <p className="text-slate-600 text-sm font-semibold mb-2">
@@ -1224,7 +1234,7 @@ const EditTemplate = () => {
             {(footerFocused || buttonFocused) && (
               <div className="mt-5">
                 <p className="text-slate-600 text-sm font-semibold mb-2">
-                  Bg Color
+                  Backgrount Color
                 </p>
                 <div className="flex gap-x-2 items-center">
                   {colorSamples.map((clr, idx) => (
